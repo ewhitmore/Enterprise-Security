@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <title>Enterprise Stack</title>
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="" />
+    <link href="Content/bootstrap.min.css" rel="stylesheet"/>
+    <link href="Content/ui-bootstrap-csp.css" rel="stylesheet" />
+    <link href="Content/Site.css" rel="stylesheet" />
+    <base href="/">
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top" ng-controller="app.layout.navigationController as vm">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Application name</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="javascript:void(0)">Home</a></li>
+                    <li><a href="javascript:void(0)">Api</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div ng-view></div>
+    </div>
+
+    <!-- Libs -->
+    <script src="Scripts/jquery-2.2.2.js"></script>
+    <script src="Scripts/bootstrap.js"></script>
+
+    <script src="Scripts/angular.js"></script>
+    <script src="Scripts/angular-sanitize.js"></script>
+    <script src="Scripts/angular-cookies.js"></script>
+    <script src="Scripts/angular-route.js"></script>
+
+    <!--<script src="Scripts/angular-ui-router.js"></script>-->
+    <script src="Scripts/angular-ui/ui-bootstrap-tpls.js"></script>
+
+    <!--CORE-->
+    <script src="app/app.module.js"></script>
+    <script src="app/app.js"></script>
+    <script src="app/app.core.js"></script>
+    <script src="app/app.routes.js"></script>
+
+    <!--BLOCKS-->
+    <script src="app/blocks/blocks.module.js"></script>
+    <script src="app/blocks/apiendpoint.config.js"></script>
+    <script src="app/blocks/apiendpoint.provider.js"></script>
+
+    <!--LAYOUT-->
+    <script src="app/layout/layout.module.js"></script>
+    <script src="app/layout/navigation.controller.js"></script>
+    <script src="app/layout/home.controller.js"></script>
+
+    <!--SERVICES-->
+    <script src="app/services/services.module.js"></script>
+
+    <!--WIDGETS-->
+    <script src="app/widgets/widgets.module.js"></script>
+
+    <!--FEATURES-->
+    <script src="app/teacher/teacherDto.js"></script>
+    <script src="app/teacher/teacher.module.js"></script>
+    <script src="app/teacher/teacher.service.js"></script>
+
+</body>
+</html>
