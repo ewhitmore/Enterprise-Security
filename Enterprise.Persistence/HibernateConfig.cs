@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using Enterprise.Model;
+﻿using System.Configuration;
 using Enterprise.Persistence.Dao.Mapping;
-
 using Enterprise.Persistence.Model;
-using FluentNHibernate.Automapping;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
-using NHibernate.AspNet.Identity;
 using NHibernate.AspNet.Identity.Helpers;
 using NHibernate.Tool.hbm2ddl;
 using Configuration = NHibernate.Cfg.Configuration;
@@ -33,20 +24,6 @@ namespace Enterprise.Persistence
         public static ISessionFactory CreateSessionFactory(string connectionStringName, string context)
         {
 
-
-
-            var list = new List<Type>();
-            list.Add(typeof(ApplicationUser));
-
-            //string @namespace = "Enterprise.Persistence.Dao.Mapping";
-
-            //var q = from t in Assembly.GetExecutingAssembly().GetTypes()
-            //        where t.IsClass && t.Namespace == @namespace
-            //        select t;
-            //q.ToList().ForEach(t => Debug.WriteLine(t.Name));
-
-            //list.AddRange(q);
-
             var sessionFactory = Fluently.Configure()
                 .Database(MsSqlConfiguration
                     .MsSql2012
@@ -58,14 +35,10 @@ namespace Enterprise.Persistence
                 )
                 .Mappings(m => m.FluentMappings.AddFromAssemblyOf<StudentMap>())
 
-                .ExposeConfiguration(cfg => { cfg.AddDeserializedMapping(MappingHelper.GetIdentityMappings(list.ToArray()), null); })
-
-                // Comment out CreateSchema to keep nhibernate from removing the data each time.
-                
-                
+                .ExposeConfiguration(cfg => { cfg.AddDeserializedMapping(MappingHelper.GetIdentityMappings(new [] { typeof(ApplicationUser) }), null); })
                 .ExposeConfiguration(cfg => cfg.SetProperty("current_session_context_class", context))
                 .ExposeConfiguration(cfg => cfg.SetProperty("adonet.batch_size", "100"))
-                .ExposeConfiguration(cfg => cfg.SetProperty("query.substitutions", "true 1, false 0"))
+                //.ExposeConfiguration(cfg => cfg.SetProperty("query.substitutions", "true 1, false 0"))
                 //.ExposeConfiguration(cfg => cfg.SetProperty("use_proxy_validator", "true"))
                 .ExposeConfiguration(SchemaSelector)
                 .BuildConfiguration()
@@ -84,7 +57,6 @@ namespace Enterprise.Persistence
         public static ISessionFactory CreateSessionFactory(ISessionFactory sessionFactory)
         {
             SessionFactory = sessionFactory;
-
             return sessionFactory;
         }
 
@@ -108,6 +80,9 @@ namespace Enterprise.Persistence
             }
         }
 
+        /// <summary>
+        /// Dispose the connection
+        /// </summary>
         public static void Dispose()
         {
             SessionFactory.Dispose();
