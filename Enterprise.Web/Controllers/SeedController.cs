@@ -7,9 +7,13 @@ namespace Enterprise.Web.Controllers
     public class SeedController : ApiController
     {
         public ISeedService SeedService { get; set; }
-        public SeedController(ISeedService seedService)
+
+        public ISecurityService SecurityService { get; set; }
+
+        public SeedController(ISeedService seedService, ISecurityService securityService)
         {
             SeedService = seedService;
+            SecurityService = securityService;
         }
 
         [HttpGet]
@@ -17,6 +21,7 @@ namespace Enterprise.Web.Controllers
         public IHttpActionResult Seed()
         {
             SeedService.Seed();
+            SecurityService.CreateUser();
             return Ok("DB Seeding Complete");
         }
 

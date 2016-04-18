@@ -36,7 +36,7 @@ namespace Enterprise.Web.Tests.Services
                 CreatedAt = DateTime.Now,
                 FullName = "John Doe",
                 IsDeleted = false,
-                ModifiedAt = DateTime.Now,
+                //ModifiedAt = DateTime.Now,
                 Id = 1,
                 Classroom = new Classroom ()
             };
@@ -65,7 +65,7 @@ namespace Enterprise.Web.Tests.Services
                 CreatedAt = DateTime.Now,
                 FullName = "John Doe",
                 IsDeleted = false,
-                ModifiedAt = DateTime.Now,
+                //ModifiedAt = DateTime.Now,
                 Id = 1,
                 Classroom = new Classroom()
             };
@@ -101,7 +101,7 @@ namespace Enterprise.Web.Tests.Services
                 CreatedAt = DateTime.Now,
                 FullName = "John Doe",
                 IsDeleted = false,
-                ModifiedAt = DateTime.Now,
+                //ModifiedAt = DateTime.Now,
                 Id = 1,
                 Classroom = new Classroom()
             };
@@ -112,7 +112,7 @@ namespace Enterprise.Web.Tests.Services
                 CreatedAt = DateTime.Now,
                 FullName = "Jane Doe",
                 IsDeleted = false,
-                ModifiedAt = DateTime.Now,
+                //ModifiedAt = DateTime.Now,
                 Id = 2,
                 Classroom = new Classroom()
             };
@@ -123,7 +123,7 @@ namespace Enterprise.Web.Tests.Services
                 CreatedAt = DateTime.Now,
                 FullName = "Sally Doe",
                 IsDeleted = false,
-                ModifiedAt = DateTime.Now,
+                //ModifiedAt = DateTime.Now,
                 Id = 3,
                 Classroom = new Classroom()
             };
@@ -135,7 +135,7 @@ namespace Enterprise.Web.Tests.Services
                 CreatedAt = DateTime.Now,
                 FullName = "Jim Doe",
                 IsDeleted = true,
-                ModifiedAt = DateTime.Now,
+                //ModifiedAt = DateTime.Now,
                 Id = 4,
                 Classroom = new Classroom()
             };

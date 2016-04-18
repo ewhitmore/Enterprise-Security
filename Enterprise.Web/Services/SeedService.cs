@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using Enterprise.Model;
+using Enterprise.Persistence;
 using Enterprise.Persistence.Dao;
+using Enterprise.Persistence.Model;
+using Microsoft.AspNet.Identity;
+using NHibernate.AspNet.Identity;
 
 namespace Enterprise.Web.Services
 {
     public class SeedService : ISeedService
     {
         public IClassroomDao ClassroomDao { private get; set; }
+
+
 
         public void Seed()
         {
@@ -22,7 +28,7 @@ namespace Enterprise.Web.Services
             var student1 = new Student
             {
                 FullName = "George Washington",
-                Birthday = new DateTime(1776,2,22),
+                Birthday = new DateTime(1801,2,22),
             };
 
             var student2 = new Student
@@ -34,7 +40,7 @@ namespace Enterprise.Web.Services
             var student3 = new Student
             {
                 FullName = "Thomas Jefferson",
-                Birthday = new DateTime(1776, 4, 13),
+                Birthday = new DateTime(1801, 4, 13),
             };
             var student4 = new Student
             {
@@ -61,7 +67,6 @@ namespace Enterprise.Web.Services
             teacher.Classroom = classroom;
 
             ClassroomDao.Save(classroom);
-
 
         }
     }

@@ -1,8 +1,19 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using Enterprise.Model;
 using Enterprise.Persistence.Dao.Mapping;
+
+using Enterprise.Persistence.Model;
+using FluentNHibernate.Automapping;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
+using NHibernate.AspNet.Identity;
+using NHibernate.AspNet.Identity.Helpers;
 using NHibernate.Tool.hbm2ddl;
 using Configuration = NHibernate.Cfg.Configuration;
 
@@ -12,17 +23,30 @@ namespace Enterprise.Persistence
     {
         public static ISessionFactory SessionFactory { get; private set; }
 
-
-
         /// <summary>
         /// Creates a MsSql2012 session factory from connection string name
         /// </summary>
         /// <param name="connectionStringName"></param>
         /// <param name="context">Context Can be call, thread_static or web. More information can be found 
-        /// <see href="http://nhibernate.info/doc/nhibernate-reference/architecture.html#architecture-current-session">here</see></param></param>
+        /// <see href="http://nhibernate.info/doc/nhibernate-reference/architecture.html#architecture-current-session">here</see></param>
         /// <returns></returns>
         public static ISessionFactory CreateSessionFactory(string connectionStringName, string context)
         {
+
+
+
+            var list = new List<Type>();
+            list.Add(typeof(ApplicationUser));
+
+            //string @namespace = "Enterprise.Persistence.Dao.Mapping";
+
+            //var q = from t in Assembly.GetExecutingAssembly().GetTypes()
+            //        where t.IsClass && t.Namespace == @namespace
+            //        select t;
+            //q.ToList().ForEach(t => Debug.WriteLine(t.Name));
+
+            //list.AddRange(q);
+
             var sessionFactory = Fluently.Configure()
                 .Database(MsSqlConfiguration
                     .MsSql2012
@@ -33,14 +57,19 @@ namespace Enterprise.Persistence
                 //.UseReflectionOptimizer
                 )
                 .Mappings(m => m.FluentMappings.AddFromAssemblyOf<StudentMap>())
-                //.Mappings(m => m.FluentMappings.Add<LogMap>())
+
+                .ExposeConfiguration(cfg => { cfg.AddDeserializedMapping(MappingHelper.GetIdentityMappings(list.ToArray()), null); })
 
                 // Comment out CreateSchema to keep nhibernate from removing the data each time.
-                .ExposeConfiguration(SchemaSelector)
-                //.ExposeConfiguration(cfg => cfg.SetInterceptor(new SqlStatementInterceptor()))
+                
+                
                 .ExposeConfiguration(cfg => cfg.SetProperty("current_session_context_class", context))
                 .ExposeConfiguration(cfg => cfg.SetProperty("adonet.batch_size", "100"))
-                .BuildConfiguration().BuildSessionFactory();
+                .ExposeConfiguration(cfg => cfg.SetProperty("query.substitutions", "true 1, false 0"))
+                //.ExposeConfiguration(cfg => cfg.SetProperty("use_proxy_validator", "true"))
+                .ExposeConfiguration(SchemaSelector)
+                .BuildConfiguration()
+                .BuildSessionFactory();
 
             SessionFactory = sessionFactory;
 

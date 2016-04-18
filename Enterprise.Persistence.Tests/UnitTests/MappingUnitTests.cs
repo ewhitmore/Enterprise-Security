@@ -89,7 +89,7 @@ namespace Enterprise.Persistence.Tests.UnitTests
                 CreatedAt = DateTime.Now,
                 FullName = "John Doe",
                 IsDeleted = false,
-                ModifiedAt = DateTime.Now
+                //ModifiedAt = DateTime.Now
                 
             };
 
@@ -99,7 +99,7 @@ namespace Enterprise.Persistence.Tests.UnitTests
                 CreatedAt = DateTime.Now,
                 FullName = "Jane Doe",
                 IsDeleted = false,
-                ModifiedAt = DateTime.Now
+                //ModifiedAt = DateTime.Now
                 
             };
 
@@ -109,7 +109,7 @@ namespace Enterprise.Persistence.Tests.UnitTests
                 CreatedAt = DateTime.Now,
                 FullName = "Sally Doe",
                 IsDeleted = false,
-                ModifiedAt = DateTime.Now
+                //ModifiedAt = DateTime.Now
                 
             };
 
@@ -120,7 +120,7 @@ namespace Enterprise.Persistence.Tests.UnitTests
                 CreatedAt = DateTime.Now,
                 FullName = "Jim Doe",
                 IsDeleted = true,
-                ModifiedAt = DateTime.Now
+                //ModifiedAt = DateTime.Now
                
             };
 

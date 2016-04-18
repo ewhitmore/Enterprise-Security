@@ -27,7 +27,7 @@ namespace Enterprise.Web
             if (HttpContext.Current != null)
             {
                 // Indicates a web based implementation
-                builder.RegisterInstance(HibernateConfig.CreateSessionFactory("SampleDatabase", "web"));
+                builder.RegisterInstance(HibernateConfig.CreateSessionFactory("EnterpriseSecurityDatabase", "web"));
                 builder.Register(s => s.Resolve<ISessionFactory>().OpenSession()).InstancePerRequest();
 
             }

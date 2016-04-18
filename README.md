@@ -22,4 +22,3 @@ Enterprise Stack - NHibernate Security Implementation using AspNet.Identity
  
 
 ## Notes
-* Things to play with

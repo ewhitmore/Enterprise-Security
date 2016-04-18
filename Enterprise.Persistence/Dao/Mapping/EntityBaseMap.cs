@@ -13,7 +13,13 @@ namespace Enterprise.Persistence.Dao.Mapping
             // Id(x => x.Id).Column("Id").GeneratedBy.GuidComb(); // Guid Id
             Map(x => x.CreatedAt);
             OptimisticLock.Version();
-            Version(x => x.ModifiedAt).CustomType("Timestamp");
+            Version(x => x.ModifiedAt);
+            //Version(x => x.ModifiedAt)
+            //    //.Column("ModifiedAt")
+            //    //.Generated.Always() // or .Never()
+            //    .UnsavedValue("0") // string?
+            //    .Access.Field()
+            //    .CustomType("timestamp");
         }
     }
 }
