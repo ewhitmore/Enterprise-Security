@@ -35,6 +35,8 @@ namespace Enterprise.Persistence.Tests.UnitTests
 
         }
 
+
+        // FIX: https://groups.google.com/forum/#!topic/sharp-architecture/GIURSZOtuwU
         [TestMethod]
         public void Mapping_CorrectlyMapStudent_ReturnsTrue()
         {
