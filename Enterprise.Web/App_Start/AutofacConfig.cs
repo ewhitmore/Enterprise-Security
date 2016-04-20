@@ -6,8 +6,11 @@ using Autofac.Integration.WebApi;
 using Enterprise.Persistence;
 using Enterprise.Persistence.Dao;
 using Enterprise.Persistence.Dao.Implementation;
+using Enterprise.Persistence.Model;
 using Enterprise.Web.Services;
+using Microsoft.AspNet.Identity;
 using NHibernate;
+using NHibernate.AspNet.Identity;
 
 namespace Enterprise.Web
 {
@@ -23,14 +26,11 @@ namespace Enterprise.Web
             // Register Controllers
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly()).PropertiesAutowired();
 
-            // Either use a session in view model or per instance depending on the context.
-            if (HttpContext.Current != null)
-            {
-                // Indicates a web based implementation
-                builder.RegisterInstance(HibernateConfig.CreateSessionFactory("EnterpriseSecurityDatabase", "web"));
-                builder.Register(s => s.Resolve<ISessionFactory>().OpenSession()).InstancePerRequest();
+   
+            // Indicates a web based implementation
+            builder.RegisterInstance(HibernateConfig.CreateSessionFactory("EnterpriseSecurityDatabase", "web"));
+            builder.Register(s => s.Resolve<ISessionFactory>().OpenSession()).InstancePerRequest();
 
-            }
 
             // Add Peristance Configuration
             RegisterPersistanceLayer(builder);
@@ -57,7 +57,7 @@ namespace Enterprise.Web
             // Either use a session in view model or per instance depending on the context.
             builder.RegisterInstance(HibernateConfig.CreateSessionFactory(sessionFactory));
             builder.Register(s => s.Resolve<ISessionFactory>().GetCurrentSession()).InstancePerLifetimeScope();
-            
+
 
             // Add Peristance Configuration
             RegisterPersistanceLayer(builder);
@@ -94,11 +94,26 @@ namespace Enterprise.Web
         {
             var serviceAssembly = Assembly.GetAssembly(typeof(StudentService));
 
-            builder.RegisterAssemblyTypes(serviceAssembly)
-                .Where(t => t.Name.EndsWith("Service"))
-                .AsImplementedInterfaces()
-                .PropertiesAutowired()
-                .InstancePerRequest();
+            // Set HTTP Contexts to InstancePerRequest
+            if (HttpContext.Current != null)
+            {
+                builder.RegisterAssemblyTypes(serviceAssembly)
+                 .Where(t => t.Name.EndsWith("Service"))
+                 .AsImplementedInterfaces()
+                 .PropertiesAutowired()
+                 .InstancePerRequest();
+
+            }
+            else
+            {
+
+                builder.RegisterAssemblyTypes(serviceAssembly)
+                    .Where(t => t.Name.EndsWith("Service"))
+                    .AsImplementedInterfaces()
+                    .PropertiesAutowired()
+                    .InstancePerLifetimeScope();
+
+            }
         }
     }
 }

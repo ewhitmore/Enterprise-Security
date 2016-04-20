@@ -21,9 +21,16 @@ namespace Enterprise.Web.Controllers
         public IHttpActionResult Seed()
         {
             SeedService.Seed();
-            SecurityService.CreateUser();
             return Ok("DB Seeding Complete");
         }
+
+        [HttpGet]
+        [Route("init")]
+        public void Init()
+        {
+            SecurityService.InitalizeSecurity();
+        }
+
 
     }
 }

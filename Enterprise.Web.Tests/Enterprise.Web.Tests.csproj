@@ -132,6 +132,7 @@
     <Compile Include="Services\StudentServiceUnitTests.cs" />
     <Compile Include="Services\TeacherServiceUnitTests.cs" />
     <Compile Include="Services\ClassroomServiceUnitTests.cs" />
+    <Compile Include="Services\SecurityServiceUnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
