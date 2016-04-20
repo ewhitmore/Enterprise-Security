@@ -85,5 +85,18 @@ namespace Enterprise.Web.Services
         {
             return UserManager.FindByName(username) != null;
         }
+
+        /// <summary>
+        /// Update password for a given username
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public IdentityResult UpdatePassword(string username, string password)
+        {
+            var user = UserManager.FindByName(username);
+            UserManager.RemovePassword(user.Id);
+            return UserManager.AddPassword(user.Id, password);
+        }
     }
 }

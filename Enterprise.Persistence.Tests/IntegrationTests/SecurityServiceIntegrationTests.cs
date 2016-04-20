@@ -137,5 +137,42 @@ namespace Enterprise.Persistence.Tests.IntegrationTests
             // Assert
             Assert.IsFalse(result.Succeeded);
         }
+
+        [TestMethod]
+        public void SecurityService_UpdatePassword_ReturnTrue()
+        {
+            // Arrange
+            const string email = "the@email.local";
+            const string username = "username";
+            const string oldPassword = "ThePassword";
+            const string newPassword = "TheNEWPassword";
+
+            // Act
+            SecurityService.CreateUser(email, username, oldPassword);
+            var result = SecurityService.UpdatePassword(username, newPassword);
+
+            // Assert
+            Assert.IsTrue(result.Succeeded);
+
+        }
+
+        [TestMethod]
+        public void SecurityService_UpdatePassword_ReturnFalse()
+        {
+            // Arrange
+            const string email = "the@email.local";
+            const string username = "username";
+            const string oldPassword = "ThePassword";
+            const string newPassword = "";
+
+            // Act
+            SecurityService.CreateUser(email, username, oldPassword);
+            var result = SecurityService.UpdatePassword(username, newPassword);
+
+            // Assert
+            Assert.IsFalse(result.Succeeded);
+
+        }
+
     }
 }

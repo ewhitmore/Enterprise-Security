@@ -37,6 +37,12 @@ namespace Enterprise.Web.Services
         /// <returns></returns>
         bool UserExists(string username);
 
-
+        /// <summary>
+        /// Update password for a given username
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        IdentityResult UpdatePassword(string username, string password);
     }
 }
