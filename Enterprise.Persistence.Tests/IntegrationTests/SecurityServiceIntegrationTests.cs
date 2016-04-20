@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using System.Security.Principal;
-using System.Threading;
 using Autofac;
 using Enterprise.Persistence.Model;
 using Enterprise.Web;
@@ -16,8 +14,9 @@ namespace Enterprise.Persistence.Tests.IntegrationTests
     [TestClass]
     public class SecurityServiceIntegrationTests
     {
-
         public ISecurityService SecurityService { get; set; }
+        public UserManager<ApplicationUser> UserManager { get; set; }
+        public RoleManager<IdentityRole> RoleManager { get; set; }
 
         [TestInitialize]
         public void Init()
@@ -26,7 +25,8 @@ namespace Enterprise.Persistence.Tests.IntegrationTests
             AutofacConfig.RegisterAutofac(TestingSessionFactory.SessionFactory); // Send session to IoC Container
             CurrentSessionContext.Bind(TestingSessionFactory.Session); // Bind to Unit Test Context
             SecurityService = AutofacConfig.Container.Resolve<ISecurityService>();
-
+            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(TestingSessionFactory.Session));
+            RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(TestingSessionFactory.Session));
         }
 
         [TestCleanup]
@@ -38,30 +38,40 @@ namespace Enterprise.Persistence.Tests.IntegrationTests
         [TestMethod]
         public void SecurityService_CreateUser_ReturnTrue()
         {
-
             // Arrange
             const string email = "the@email.local";
             const string username = "theUserName";
             const string password = "thePass";
-            
 
             // Act
-            SecurityService.CreateUser(email, username, password);
-            var results = SecurityService.Session.CreateCriteria<ApplicationUser>().List<ApplicationUser>().First();
+            var result = SecurityService.CreateUser(email, username, password);
+            var user = SecurityService.Session.CreateCriteria<ApplicationUser>().List<ApplicationUser>().First();
 
             // Assert
-            Assert.AreEqual(email, results.Email);
+            Assert.AreEqual(email, user.Email);
+            Assert.IsTrue(result.Succeeded);
+        }
 
+        [TestMethod]
+        public void SecurityService_CreateUser_ReturnFalse()
+        {
+            // Arrange
+            const string email = "the@email.local";
+            const string username = "";
+            const string password = "";
+
+            // Act
+            var result = SecurityService.CreateUser(email, username, password);
+
+            // Assert
+            Assert.IsFalse(result.Succeeded);
+            Assert.AreEqual("Passwords must be at least 6 characters.", result.Errors.First());
         }
 
         [TestMethod]
         public void SecurityService_InitalizeSecurity_ReturnTrue()
         {
-
             // Arrange
-            var session = TestingSessionFactory.Session;
-            //var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(session));
-            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(session));
             const string username = "Admin";
 
             // Act
@@ -69,9 +79,8 @@ namespace Enterprise.Persistence.Tests.IntegrationTests
             var results = SecurityService.Session.CreateCriteria<ApplicationUser>().List<ApplicationUser>().First(x => x.UserName == username);
 
             // Assert
-            Assert.IsTrue(roleManager.RoleExists("SysAdmin"));
+            Assert.IsTrue(RoleManager.RoleExists("SysAdmin"));
             Assert.AreEqual(username, results.UserName);
-
         }
 
         [TestMethod]
@@ -82,11 +91,9 @@ namespace Enterprise.Persistence.Tests.IntegrationTests
             const string username = "theUserName";
             const string password = "thePass";
 
-
             // Act
             SecurityService.CreateUser(email, username, password);
             var results = SecurityService.UserExists(username);
-
 
             // Assert
             Assert.IsTrue(results);
@@ -101,11 +108,34 @@ namespace Enterprise.Persistence.Tests.IntegrationTests
             // Act
             var results = SecurityService.UserExists(username);
 
-
             // Assert
             Assert.IsFalse(results);
         }
 
+        [TestMethod]
+        public void SecurityService_CreateRole_ReturnTrue()
+        {
+            // Arrange 
+            const string roleName = "PowerUser";
 
+            // Act
+            var result = SecurityService.CreateRole(roleName);
+
+            // Assert
+            Assert.IsTrue(result.Succeeded);
+        }
+
+        [TestMethod]
+        public void SecurityService_CreateRole_ReturnFalse()
+        {
+            // Arrange 
+            const string roleName = "";
+
+            // Act
+            var result = SecurityService.CreateRole(roleName);
+
+            // Assert
+            Assert.IsFalse(result.Succeeded);
+        }
     }
 }

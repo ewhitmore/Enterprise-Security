@@ -12,18 +12,5 @@ namespace Enterprise.Web.Tests.Services
         {
             AutofacConfig.RegisterAutofac();
         }
-
-        //[TestMethod]
-        //public void SecurityService_CreateUser_ReturnsTrue()
-        //{
-        //    // Arrange
-
-
-        //    // Act
-           
-
-
-        //    // Assert
-        //}
     }
 }

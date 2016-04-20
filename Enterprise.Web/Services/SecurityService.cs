@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using Enterprise.Persistence.Model;
 using Microsoft.AspNet.Identity;
 using NHibernate;
 using NHibernate.AspNet.Identity;
-using NHibernate.Mapping.ByCode.Impl;
 
 
 namespace Enterprise.Web.Services
@@ -14,11 +12,9 @@ namespace Enterprise.Web.Services
 
     public sealed class SecurityService : ISecurityService
     {
-
         public ISession Session { get; set; }
         private UserManager<ApplicationUser> UserManager { get; set; }
         private RoleManager<IdentityRole> RoleManager { get; set; }
-
 
         public SecurityService(ISession session)
         {
@@ -28,12 +24,12 @@ namespace Enterprise.Web.Services
         }
 
         /// <summary>
-        /// Create User
+        /// Create a User
         /// </summary>
         /// <param name="email"></param>
         /// <param name="username"></param>
         /// <param name="password"></param>
-        public void CreateUser(string email, string username, string password)
+        public IdentityResult CreateUser(string email, string username, string password)
         {
             var user = new ApplicationUser
             {
@@ -41,7 +37,17 @@ namespace Enterprise.Web.Services
                 UserName = username
             };
 
-           UserManager.Create(user, password);
+            return UserManager.Create(user, password);
+        }
+
+        /// <summary>
+        /// Create a Role
+        /// </summary>
+        /// <param name="roleName"></param>
+        /// <returns></returns>
+        public IdentityResult CreateRole(string roleName)
+        {
+            return RoleManager.Create(new IdentityRole {Name = roleName });
         }
 
         /// <summary>
@@ -51,8 +57,20 @@ namespace Enterprise.Web.Services
         {
             if (!UserExists("Admin"))
             {
-                CreateUser("admin@localhost", "Admin", "TheAdminPass");
-                RoleManager.Create(new IdentityRole {Name = "SysAdmin"});
+                var createUserResults = CreateUser("admin@localhost", "Admin", "TheAdminPass");
+
+                if (!createUserResults.Succeeded)
+                {
+                    throw new Exception(string.Concat(createUserResults.Errors));
+                }
+
+                var createRoleResults = CreateRole("SysAdmin");
+
+                if (!createRoleResults.Succeeded)
+                {
+                    throw new Exception(string.Concat(createRoleResults.Errors));
+                }
+
                 var user = UserManager.FindByName("Admin");
                 UserManager.AddToRole(user.Id, "SysAdmin");
             }
