@@ -41,6 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classroom.cs" />
+    <Compile Include="Client.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="RefreshToken.cs" />
     <Compile Include="Student.cs" />
     <Compile Include="Teacher.cs" />
     <Compile Include="EntityBase.cs" />

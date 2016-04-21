@@ -3,6 +3,7 @@ using Enterprise.Web.Services;
 
 namespace Enterprise.Web.Controllers
 {
+    [AllowAnonymous]
     [RoutePrefix("api/v1/seed")]
     public class SeedController : ApiController
     {

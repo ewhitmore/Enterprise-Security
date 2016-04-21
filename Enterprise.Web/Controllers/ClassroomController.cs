@@ -8,6 +8,7 @@ using Enterprise.Web.Services;
 
 namespace Enterprise.Web.Controllers
 {
+    [AllowAnonymous]
     [RoutePrefix("api/v1/classroom")]
     public class ClassroomController : ApiController
     {

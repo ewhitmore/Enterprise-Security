@@ -43,7 +43,8 @@ namespace Enterprise.Web
 
             // Set the dependency resolver to be Autofac.
             Container = builder.Build();
-            GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(Container);
+
+            
 
         }
 

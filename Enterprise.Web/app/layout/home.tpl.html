@@ -25,20 +25,22 @@
         </tr>
         </thead>
         <tbody>
-            <!--<tr>
-                <td></td>
-                <td></td>
-                <td><input class="form-control" type="text" ng-model="vm.newLog.description"/></td>
-                <td><button class="btn btn-primary" ng-click="vm.insert(vm.newLog)">Add</button></td>
-            </tr>-->
-            <tr ng-repeat="teacher in vm.teachers">
-                <td>{{teacher.id}}</td>
-                <td>{{teacher.fullName}}</td>
-                <td>{{teacher.birthday | date:'medium'}}</td>
-                <td></td>
-            </tr>
+        <!--<tr>
+            <td></td>
+            <td></td>
+            <td><input class="form-control" type="text" ng-model="vm.newLog.description"/></td>
+            <td><button class="btn btn-primary" ng-click="vm.insert(vm.newLog)">Add</button></td>
+        </tr>-->
+        <tr ng-repeat="teacher in vm.teachers">
+            <td>{{teacher.id}}</td>
+            <td>{{teacher.fullName}}</td>
+            <td>{{teacher.birthday | date:'medium'}}</td>
+            <td></td>
+        </tr>
         </tbody>
 
     </table>
+    <pre>{{vm|json}}</pre>
+    <pre>{{vm.teachers|json}}</pre>
 
 </div>

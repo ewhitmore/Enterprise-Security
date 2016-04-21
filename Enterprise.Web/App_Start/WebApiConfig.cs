@@ -25,8 +25,8 @@ namespace Enterprise.Web
 
         private static void ConfigureMediaTypes(HttpConfiguration config)
         {
-            GlobalConfiguration.Configuration.Formatters.XmlFormatter.SupportedMediaTypes.Clear();
-            var formatters = GlobalConfiguration.Configuration.Formatters;
+            config.Formatters.XmlFormatter.SupportedMediaTypes.Clear();
+            var formatters = config.Formatters;
 
             var jsonFormatter = formatters.JsonFormatter;
             jsonFormatter.SerializerSettings.Converters.Add(new StringEnumConverter());
