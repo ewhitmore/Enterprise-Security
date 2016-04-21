@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Enterprise.Model
 {
     public class RefreshToken
     {
-        public string Id { get; set; }
-        public string Subject { get; set; }
-        public string ClientId { get; set; }
-        public DateTime IssuedUtc { get; set; }
-        public DateTime ExpiresUtc { get; set; }
-        public string ProtectedTicket { get; set; }
+        public virtual int Id { get; set; }
+        public virtual string Subject { get; set; }
+        public virtual string ClientId { get; set; }
+        public virtual DateTime IssuedUtc { get; set; }
+        public virtual DateTime ExpiresUtc { get; set; }
+        public virtual string ProtectedTicket { get; set; }
     }
 }

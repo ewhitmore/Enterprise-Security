@@ -79,6 +79,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dao\Mapping\ClientMap.cs" />
+    <Compile Include="Dao\Mapping\RefreshTokenMap.cs" />
     <Compile Include="Model\ApplicationUser.cs" />
     <Compile Include="Dao\IClassroomDao.cs" />
     <Compile Include="Dao\Implementation\ClassroomDao.cs" />
