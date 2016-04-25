@@ -7,8 +7,10 @@ using Enterprise.Persistence;
 using Enterprise.Persistence.Dao;
 using Enterprise.Persistence.Dao.Implementation;
 using Enterprise.Persistence.Model;
+using Enterprise.Web.Security;
 using Enterprise.Web.Services;
 using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security.OAuth;
 using NHibernate;
 using NHibernate.AspNet.Identity;
 
@@ -41,11 +43,25 @@ namespace Enterprise.Web
             // Add Types
             AddTypes(builder);
 
+            // Other
+            AddOther(builder);
+
             // Set the dependency resolver to be Autofac.
             Container = builder.Build();
 
             
 
+        }
+
+        private static void AddOther(ContainerBuilder builder)
+        {
+            //http://stackoverflow.com/questions/25871392/autofac-dependency-injection-in-implementation-of-oauthauthorizationserverprovid
+
+            builder
+              .RegisterType<SimpleAuthorizationServerProvider>()
+              .As<IOAuthAuthorizationServerProvider>()
+              //.PropertiesAutowired() // to automatically resolve IUserService
+              .SingleInstance(); // you only need one instance of this provider
         }
 
         public static void RegisterAutofac(ISessionFactory sessionFactory)

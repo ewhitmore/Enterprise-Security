@@ -1,16 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using Enterprise.Model;
+using Enterprise.Persistence.Model;
+using Enterprise.Web.Services;
 using Enterprise.Web.Utils;
+using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security.Infrastructure;
+using NHibernate;
+using NHibernate.AspNet.Identity;
 
-namespace Enterprise.Web.Providers
+namespace Enterprise.Web.Security
 {
-    public class SimpleRefreshTokenProvider : IAuthenticationTokenProvider
+    public class SimpleRefreshTokenProviderService : IAuthenticationTokenProvider
     {
+        public ISession Session { get; set; }
+
+        public ISecurityService SecurityService { get; set; }
 
         public async Task CreateAsync(AuthenticationTokenCreateContext context)
         {
@@ -49,6 +55,33 @@ namespace Enterprise.Web.Providers
             //    }
 
             //}
+
+            //todo: fix this?
+           
+                var refreshTokenLifeTime = context.OwinContext.Get<string>("as:clientRefreshTokenLifeTime");
+
+                var token = new RefreshToken()
+                {
+                    Id = Helper.GetHash(refreshTokenId),
+                    ClientId = clientid,
+                    Subject = context.Ticket.Identity.Name,
+                    IssuedUtc = DateTime.UtcNow,
+                    ExpiresUtc = DateTime.UtcNow.AddMinutes(Convert.ToDouble(refreshTokenLifeTime))
+                };
+
+                context.Ticket.Properties.IssuedUtc = token.IssuedUtc;
+                context.Ticket.Properties.ExpiresUtc = token.ExpiresUtc;
+
+                token.ProtectedTicket = context.SerializeTicket();
+            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(Session));
+            var result = SecurityService.AddRefreshToken(token);
+
+                if (result.Id.Any())
+                {
+                    context.SetToken(refreshTokenId);
+                }
+
+         
         }
 
         public async Task ReceiveAsync(AuthenticationTokenReceiveContext context)
@@ -70,6 +103,17 @@ namespace Enterprise.Web.Providers
             //        var result = await _repo.RemoveRefreshToken(hashedTokenId);
             //    }
             //}
+
+            var refreshToken = SecurityService.FindRefreshToken(hashedTokenId);
+
+            if (refreshToken != null)
+            {
+                //Get protectedTicket from refreshToken class
+                context.DeserializeTicket(refreshToken.ProtectedTicket);
+                var result = SecurityService.RemoveRefreshToken(hashedTokenId);
+            }
+
+
         }
 
         public void Create(AuthenticationTokenCreateContext context)

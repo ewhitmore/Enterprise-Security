@@ -45,6 +45,7 @@ namespace Enterprise.Web.Controllers
         /// Get all students including ones that have been deleted
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         [Route("GetAll")]
         [HttpGet]
         public IList<TeacherDto> GetAll()

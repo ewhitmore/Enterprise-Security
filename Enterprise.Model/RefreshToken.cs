@@ -4,7 +4,7 @@ namespace Enterprise.Model
 {
     public class RefreshToken
     {
-        public virtual int Id { get; set; }
+        public virtual string Id { get; set; }
         public virtual string Subject { get; set; }
         public virtual string ClientId { get; set; }
         public virtual DateTime IssuedUtc { get; set; }

@@ -1,19 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
 using Enterprise.Model;
+using Enterprise.Persistence;
+using Enterprise.Persistence.Model;
 using Enterprise.Web.Utils;
+using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
+using NHibernate;
 using NHibernate.AspNet.Identity;
 
-namespace Enterprise.Web.Providers
+namespace Enterprise.Web.Security
 {
-    public class SimpleAuthorizationServerProvider : OAuthAuthorizationServerProvider
+    public class SimpleAuthorizationServerProvider : OAuthAuthorizationServerProvider, ISimpleAuthorizationServerProvider
     {
+        public ISession Session { get; set; }
+
+        public SimpleAuthorizationServerProvider()
+        {
+            Session = HibernateConfig.CreateSessionFactory("EnterpriseSecurityDatabase", "web").OpenSession();
+        }
+
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
 
@@ -39,6 +48,9 @@ namespace Enterprise.Web.Providers
             //{
             //    client = _repo.FindClient(context.ClientId);
             //}
+            // todo: redo?
+            
+            client = Session.QueryOver<Client>().Where(c => c.Id == clientId).SingleOrDefault();
 
             if (client == null)
             {
@@ -79,11 +91,19 @@ namespace Enterprise.Web.Providers
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
 
-            var allowedOrigin = context.OwinContext.Get<string>("as:clientAllowedOrigin");
+            ////var allowedOrigin = context.OwinContext.Get<string>("as:clientAllowedOrigin");
 
-            if (allowedOrigin == null) allowedOrigin = "*";
+            ////if (allowedOrigin == null) allowedOrigin = "*";
 
-            context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
+            ////context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
+
+            //var header = context.OwinContext.Response.Headers.SingleOrDefault(h => h.Key == "Access-Control-Allow-Origin");
+            //if (header.Equals(default(KeyValuePair<string, string[]>)))
+            //{
+            //    context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
+            //}
+            context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
+
 
             //using (AuthRepository _repo = new AuthRepository())
             //{
@@ -95,6 +115,17 @@ namespace Enterprise.Web.Providers
             //        return;
             //    }
             //}
+            //IdentityUser user = await _repo.FindUser(context.UserName, context.Password);
+
+            //todo: fix this?
+            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(Session));
+            IdentityUser user = await UserManager.FindAsync(context.UserName, context.Password);
+
+            if (user == null)
+            {
+                context.SetError("invalid_grant", "The user name or password is incorrect.");
+                return;
+            }
 
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
             identity.AddClaim(new Claim(ClaimTypes.Name, context.UserName));

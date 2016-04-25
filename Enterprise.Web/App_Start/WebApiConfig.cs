@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -9,8 +10,6 @@ namespace Enterprise.Web
     {
         public static void Register(HttpConfiguration config)
         {
-            // Web API configuration and services
-
             // Web API routes
             config.MapHttpAttributeRoutes();
 

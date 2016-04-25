@@ -2,7 +2,7 @@
 {
     public class Client
     {
-        public virtual int Id { get; set; }
+        public virtual string Id { get; set; }
         public virtual string Secret { get; set; }
         public virtual string Name { get; set; }
         public virtual ApplicationTypes ApplicationType { get; set; }

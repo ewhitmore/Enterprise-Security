@@ -1,13 +1,15 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Enterprise.Model;
+using Enterprise.Persistence.Model;
 using Microsoft.AspNet.Identity;
 using NHibernate;
+using NHibernate.AspNet.Identity;
 
 namespace Enterprise.Web.Services
 {
     public interface ISecurityService
     {
-        /// <summary>
-        /// NHibernate Database Session
-        /// </summary>
         ISession Session { get; set; }
 
         /// <summary>
@@ -44,5 +46,17 @@ namespace Enterprise.Web.Services
         /// <param name="password"></param>
         /// <returns></returns>
         IdentityResult UpdatePassword(string username, string password);
+
+        IdentityResult RegisterUser(ApplicationUser applicationUser);
+        Task<IdentityUser> FindUser(string userName, string password);
+        Client FindClient(string clientId);
+        RefreshToken AddRefreshToken(RefreshToken token);
+        bool RemoveRefreshToken(string refreshTokenId);
+        void RemoveRefreshToken(RefreshToken refreshToken);
+        RefreshToken FindRefreshToken(string refreshTokenId);
+        List<RefreshToken> GetAllRefreshTokens();
+        Task<IdentityUser> FindAsync(UserLoginInfo loginInfo);
+        Task<IdentityResult> CreateAsync(ApplicationUser user);
+        Task<IdentityResult> AddLoginAsync(string userId, UserLoginInfo login);
     }
 }
