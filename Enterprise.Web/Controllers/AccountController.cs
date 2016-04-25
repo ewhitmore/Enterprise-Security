@@ -21,10 +21,7 @@ namespace Enterprise.Web.Controllers
     [RoutePrefix("api/account")]
     public class AccountController : ApiController
     {
-        private IAuthenticationManager Authentication
-        {
-            get { return Request.GetOwinContext().Authentication; }
-        }
+        private IAuthenticationManager Authentication => Request.GetOwinContext().Authentication;
 
         public ISecurityService SecurityService { get; set; }
 

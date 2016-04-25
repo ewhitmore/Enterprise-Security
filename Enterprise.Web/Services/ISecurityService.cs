@@ -48,7 +48,7 @@ namespace Enterprise.Web.Services
         IdentityResult UpdatePassword(string username, string password);
 
         IdentityResult RegisterUser(ApplicationUser applicationUser);
-        Task<IdentityUser> FindUser(string userName, string password);
+        IdentityUser FindUser(string userName, string password);
         Client FindClient(string clientId);
         RefreshToken AddRefreshToken(RefreshToken token);
         bool RemoveRefreshToken(string refreshTokenId);

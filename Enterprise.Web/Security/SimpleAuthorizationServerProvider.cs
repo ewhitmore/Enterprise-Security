@@ -26,9 +26,9 @@ namespace Enterprise.Web.Security
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
 
-            string clientId = string.Empty;
-            string clientSecret = string.Empty;
-            Client client = null;
+            var clientId = string.Empty;
+            var clientSecret = string.Empty;
+            Client client;
 
             if (!context.TryGetBasicCredentials(out clientId, out clientSecret))
             {
@@ -90,36 +90,12 @@ namespace Enterprise.Web.Security
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-
-            ////var allowedOrigin = context.OwinContext.Get<string>("as:clientAllowedOrigin");
-
-            ////if (allowedOrigin == null) allowedOrigin = "*";
-
-            ////context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
-
-            //var header = context.OwinContext.Response.Headers.SingleOrDefault(h => h.Key == "Access-Control-Allow-Origin");
-            //if (header.Equals(default(KeyValuePair<string, string[]>)))
-            //{
-            //    context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
-            //}
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
-
-
-            //using (AuthRepository _repo = new AuthRepository())
-            //{
-            //    IdentityUser user = await _repo.FindUser(context.UserName, context.Password);
-
-            //    if (user == null)
-            //    {
-            //        context.SetError("invalid_grant", "The user name or password is incorrect.");
-            //        return;
-            //    }
-            //}
-            //IdentityUser user = await _repo.FindUser(context.UserName, context.Password);
 
             //todo: fix this?
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(Session));
-            IdentityUser user = await UserManager.FindAsync(context.UserName, context.Password);
+            //IdentityUser user = await UserManager.FindAsync(context.UserName, context.Password);
+            IdentityUser user = UserManager.Find(context.UserName, context.Password);
 
             if (user == null)
             {
@@ -135,7 +111,7 @@ namespace Enterprise.Web.Security
             var props = new AuthenticationProperties(new Dictionary<string, string>
                 {
                     {
-                        "as:client_id", (context.ClientId == null) ? string.Empty : context.ClientId
+                        "as:client_id", context.ClientId ?? string.Empty
                     },
                     {
                         "userName", context.UserName
@@ -161,7 +137,7 @@ namespace Enterprise.Web.Security
             // Change auth ticket for refresh token requests
             var newIdentity = new ClaimsIdentity(context.Ticket.Identity);
 
-            var newClaim = newIdentity.Claims.Where(c => c.Type == "newClaim").FirstOrDefault();
+            var newClaim = newIdentity.Claims.FirstOrDefault(c => c.Type == "newClaim");
             if (newClaim != null)
             {
                 newIdentity.RemoveClaim(newClaim);

@@ -120,9 +120,9 @@ namespace Enterprise.Web.Services
             return result;
         }
 
-        public async Task<IdentityUser> FindUser(string userName, string password)
+        public IdentityUser FindUser(string userName, string password)
         {
-            IdentityUser user = await UserManager.FindAsync(userName, password);
+            IdentityUser user = UserManager.Find(userName, password);
 
             return user;
         }
