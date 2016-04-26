@@ -3,7 +3,6 @@ using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
 using Enterprise.Web.Security;
-using Enterprise.Web.Services;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using Microsoft.Owin.Security.OAuth;
@@ -19,42 +18,44 @@ namespace Enterprise.Web
 
         public void Configuration(IAppBuilder app)
         {
-            HttpConfiguration config = new HttpConfiguration();
+            var config = new HttpConfiguration();
+
+            // Configure IoC Container
             AutofacConfig.RegisterAutofac();
             config.DependencyResolver = new AutofacWebApiDependencyResolver(AutofacConfig.Container);
             app.UseAutofacMiddleware(AutofacConfig.Container);
 
+            // Configure Owin
             ConfigureOAuth(app);
 
-            
+            // Register Web API routes
             WebApiConfig.Register(config);
+
+            // Try to avoid CORS issues with the browser
             app.UseCors(CorsOptions.AllowAll);
+
+            // Apply settings to WebAPI
             app.UseWebApi(config);
-
-
             
         }
 
-
-
         private void ConfigureOAuth(IAppBuilder app)
         {
+            // Use cookies to hold tokens
             app.UseExternalSignInCookie(Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ExternalCookie);
             OAuthBearerOptions = new OAuthBearerAuthenticationOptions();
 
             OAuthAuthorizationServerOptions OAuthServerOptions = new OAuthAuthorizationServerOptions()
             {
-
                 AllowInsecureHttp = true,
                 TokenEndpointPath = new PathString("/token"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(30),
-                //Provider = new SimpleAuthorizationServerProviderService(),
                 Provider = AutofacConfig.Container.Resolve<IOAuthAuthorizationServerProvider>(),
                 RefreshTokenProvider = new SimpleRefreshTokenProvider()
                
             };
 
-            // Token Generation
+            // Force app to use OWIN/OAuthBearer Tokens for authentication overriding existing auth system
             app.UseOAuthAuthorizationServer(OAuthServerOptions);
             app.UseOAuthBearerAuthentication(OAuthBearerOptions);
             

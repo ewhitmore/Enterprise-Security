@@ -17,19 +17,19 @@ namespace Enterprise.Web.Security
 {
     public class SimpleAuthorizationServerProvider : OAuthAuthorizationServerProvider, ISimpleAuthorizationServerProvider, IDisposable
     {
-        public ISession Session { get; set; }
+        private ISession Session { get; set; }
 
         public SimpleAuthorizationServerProvider()
         {
+            // Todo: Can we do this in the IoC Container?
+            // Create database session
             Session = HibernateConfig.CreateSessionFactory("EnterpriseSecurityDatabase", "web").OpenSession();
         }
 
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
-
-            var clientId = string.Empty;
-            var clientSecret = string.Empty;
-            Client client;
+            string clientId;
+            string clientSecret;
 
             if (!context.TryGetBasicCredentials(out clientId, out clientSecret))
             {
@@ -45,20 +45,17 @@ namespace Enterprise.Web.Security
                 return Task.FromResult<object>(null);
             }
 
-            //using (AuthRepository _repo = new AuthRepository())
-            //{
-            //    client = _repo.FindClient(context.ClientId);
-            //}
-            // todo: redo?
-            
-            client = Session.QueryOver<Client>().Where(c => c.Id == clientId).SingleOrDefault();
+            // Get Client by Id
+            var client = Session.QueryOver<Client>().Where(c => c.Id == clientId).SingleOrDefault();
 
+            // Client Validation Checks
             if (client == null)
             {
                 context.SetError("invalid_clientId", string.Format("Client '{0}' is not registered in the system.", context.ClientId));
                 return Task.FromResult<object>(null);
             }
 
+            // NativeApp (Non-Web Based) Check
             if (client.ApplicationType == ApplicationTypes.NativeConfidential)
             {
                 if (string.IsNullOrWhiteSpace(clientSecret))
@@ -76,14 +73,17 @@ namespace Enterprise.Web.Security
                 }
             }
 
+            // Client Active Check
             if (!client.Active)
             {
                 context.SetError("invalid_clientId", "Client is inactive.");
                 return Task.FromResult<object>(null);
             }
 
-            context.OwinContext.Set<string>("as:clientAllowedOrigin", client.AllowedOrigin);
-            context.OwinContext.Set<string>("as:clientRefreshTokenLifeTime", client.RefreshTokenLifeTime.ToString());
+            // Set Allowed Origin to avoid CORS issues
+            context.OwinContext.Set("as:clientAllowedOrigin", client.AllowedOrigin);
+            // Set Token Lifetime based on value from database
+            context.OwinContext.Set("as:clientRefreshTokenLifeTime", client.RefreshTokenLifeTime.ToString());
 
             context.Validated();
             return Task.FromResult<object>(null);
@@ -91,24 +91,29 @@ namespace Enterprise.Web.Security
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
+            // Set Allowed Origin to avoid CORS issues
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
 
-            //todo: fix this?
+            // Todo: Can we do this in the IoC Container?
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(Session));
-            //IdentityUser user = await UserManager.FindAsync(context.UserName, context.Password);
+
+            // See if user can login
             IdentityUser user = UserManager.Find(context.UserName, context.Password);
 
+            // Reject Login if user isn't found based on credentials
             if (user == null)
             {
                 context.SetError("invalid_grant", "The user name or password is incorrect.");
                 return;
             }
 
+            // Create claim based on user info and client info
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
             identity.AddClaim(new Claim(ClaimTypes.Name, context.UserName));
             identity.AddClaim(new Claim(ClaimTypes.Role, "user"));
             identity.AddClaim(new Claim("sub", context.UserName));
 
+            // Add additional properties required by Auth system
             var props = new AuthenticationProperties(new Dictionary<string, string>
                 {
                     {
@@ -119,13 +124,17 @@ namespace Enterprise.Web.Security
                     }
                 });
 
+            // Make Authentication Ticket
             var ticket = new AuthenticationTicket(identity, props);
+
+            // Validate Ticket allowing user to interact with WebAPI
             context.Validated(ticket);
 
         }
 
         public override Task GrantRefreshToken(OAuthGrantRefreshTokenContext context)
         {
+
             var originalClient = context.Ticket.Properties.Dictionary["as:client_id"];
             var currentClient = context.ClientId;
 
@@ -145,6 +154,7 @@ namespace Enterprise.Web.Security
             }
             newIdentity.AddClaim(new Claim("newClaim", "newValue"));
 
+            // Create new ticket from old ticket info
             var newTicket = new AuthenticationTicket(newIdentity, context.Ticket.Properties);
             context.Validated(newTicket);
 
