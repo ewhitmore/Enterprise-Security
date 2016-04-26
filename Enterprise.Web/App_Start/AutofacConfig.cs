@@ -92,7 +92,7 @@ namespace Enterprise.Web
             builder.RegisterType<StudentDao>().As<IStudentDao>().PropertiesAutowired();
             builder.RegisterType<ClassroomDao>().As<IClassroomDao>().PropertiesAutowired();
             builder.RegisterType<ClientDao>().As<IClientDao>().PropertiesAutowired();
-            builder.RegisterType<IRefreshTokenDao>().As<IRefreshTokenDao>().PropertiesAutowired();
+            builder.RegisterType<RefreshTokenDao>().As<IRefreshTokenDao>().PropertiesAutowired();
         }
 
         private static void AddServices(ContainerBuilder builder)

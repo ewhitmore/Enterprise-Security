@@ -101,6 +101,8 @@
     <Compile Include="IntegrationTests\StudentDaoIntegrationTests.cs" />
     <Compile Include="IntegrationTests\ClassroomDaoIntegrationTests.cs" />
     <Compile Include="IntegrationTests\SecurityServiceIntegrationTests.cs" />
+    <Compile Include="IntegrationTests\ClientDaoIntegrationTests.cs" />
+    <Compile Include="IntegrationTests\RefreshTokenDaoIntegrationTests.cs" />
     <Compile Include="TestingSessionFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTests\MappingUnitTests.cs" />

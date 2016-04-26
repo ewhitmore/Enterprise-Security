@@ -34,7 +34,6 @@ namespace Enterprise.Persistence.Tests.IntegrationTests
         public void TeacherDao_SaveTeacher_ReturnsTrue()
         {
             // Arrange
-            var teacherDao = AutofacConfig.Container.Resolve<ITeacherDao>();
             var teacher = new Teacher()
             {
                 Birthday = new DateTime(Faker.RandomNumber.Next(1980, 2000), Faker.RandomNumber.Next(1, 12), Faker.RandomNumber.Next(1, 28)),
@@ -42,7 +41,7 @@ namespace Enterprise.Persistence.Tests.IntegrationTests
             };
 
             // Act
-            teacherDao.Save(teacher);
+            TeacherDao.Save(teacher);
 
             // Assert
             Assert.AreEqual(1, teacher.Id);
@@ -95,7 +94,6 @@ namespace Enterprise.Persistence.Tests.IntegrationTests
             Assert.AreEqual(fullname,teacher.FullName); // Test cache object
             Assert.AreEqual(fullname,dbTeacher.FullName); // Test database object
         }
-
 
         [TestMethod]
         public void TeacherDao_DeleteTeacherGeorgeWashington_Returns0()
