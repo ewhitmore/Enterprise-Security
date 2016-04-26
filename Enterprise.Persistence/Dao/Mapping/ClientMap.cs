@@ -3,11 +3,11 @@ using FluentNHibernate.Mapping;
 
 namespace Enterprise.Persistence.Dao.Mapping
 {
-    public class ClientMap : ClassMap<Client>
+    public class ClientMap : EntityBaseMap<Client>
     {
         public ClientMap()
         {
-            Id(client => client.Id);
+            Map(client => client.ClientId);
             Map(client => client.Active);
             Map(client => client.AllowedOrigin);
             Map(client => client.ApplicationType);

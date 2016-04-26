@@ -3,12 +3,12 @@ using FluentNHibernate.Mapping;
 
 namespace Enterprise.Persistence.Dao.Mapping
 {
-    public class RefreshTokenMap : ClassMap<RefreshToken>
+    public class RefreshTokenMap : EntityBaseMap<RefreshToken>
     {
         public RefreshTokenMap()
         {
-            //Id(token => token.Id).GeneratedBy.GuidComb();
-            Id(token => token.Id);
+  
+            Map(token => token.ReferenceId);
             Map(token => token.ClientId);
             Map(token => token.ExpiresUtc);
             Map(token => token.IssuedUtc);

@@ -1,12 +1,13 @@
 ﻿using Enterprise.Persistence.Dao.Mapping;
 using Enterprise.Persistence.Model;
+using Enterprise.Persistence.Tests;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using NHibernate.AspNet.Identity.Helpers;
 using NHibernate.Tool.hbm2ddl;
 
-namespace Enterprise.Persistence.Tests
+namespace Enterprise.Web.Tests
 {
     internal class TestingSessionFactory
     {
@@ -38,7 +39,7 @@ namespace Enterprise.Persistence.Tests
             Session = SessionFactory.OpenSession();
             new SchemaExport(config).Execute(true, true, false, Session.Connection, null);
 
-            }
+        }
 
     }
 }

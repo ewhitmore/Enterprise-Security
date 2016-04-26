@@ -20,7 +20,8 @@ namespace Enterprise.Web.Tests.Controllers
         [TestInitialize]
         public void Init()
         {
-            AutofacConfig.RegisterAutofac();
+            TestingSessionFactory.CreateSessionFactory("thread_static");
+            AutofacConfig.RegisterAutofac(TestingSessionFactory.SessionFactory);
 
             _configuration = new HttpConfiguration
             {

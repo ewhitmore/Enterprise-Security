@@ -130,7 +130,7 @@ namespace Enterprise.Web.Services
         public Client FindClient(string clientId)
         {
             //var client = _ctx.Clients.Find(clientId);
-            var client = Session.QueryOver<Client>().Where(c => c.Id.ToString() == clientId).SingleOrDefault();
+            var client = Session.QueryOver<Client>().Where(c => c.ClientId.ToString() == clientId).SingleOrDefault();
 
             return client;
         }
@@ -180,16 +180,11 @@ namespace Enterprise.Web.Services
 
         public RefreshToken FindRefreshToken(string refreshTokenId)
         {
-            //var refreshToken = await _ctx.RefreshTokens.FindAsync(refreshTokenId);
-
-            return Session.QueryOver<RefreshToken>().Where(r => r.Id.ToString() == refreshTokenId).SingleOrDefault(); 
+            return Session.QueryOver<RefreshToken>().Where(r => r.ReferenceId == refreshTokenId).SingleOrDefault(); 
         }
 
         public List<RefreshToken> GetAllRefreshTokens()
         {
-            //return CurrentSession.CreateCriteria(typeof(TEntity)).List<TEntity>();
-
-
             return new List<RefreshToken>(Session.CreateCriteria(typeof(RefreshToken)).List<RefreshToken>());
         }
 

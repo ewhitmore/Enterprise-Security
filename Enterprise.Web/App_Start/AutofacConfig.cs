@@ -2,19 +2,15 @@
 using System.Web;
 using System.Web.Http;
 using Autofac;
-using Autofac.Builder;
 using Autofac.Integration.WebApi;
 using Enterprise.Persistence;
 using Enterprise.Persistence.Dao;
 using Enterprise.Persistence.Dao.Implementation;
-using Enterprise.Persistence.Model;
 using Enterprise.Web.Security;
 using Enterprise.Web.Services;
-using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security.Infrastructure;
 using Microsoft.Owin.Security.OAuth;
 using NHibernate;
-using NHibernate.AspNet.Identity;
 
 namespace Enterprise.Web
 {
@@ -72,6 +68,9 @@ namespace Enterprise.Web
             // Add Types
             AddTypes(builder);
 
+            // Other
+            AddOther(builder);
+
             // Set the dependency resolver to be Autofac.
             Container = builder.Build();
             GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(Container);
@@ -93,6 +92,7 @@ namespace Enterprise.Web
             builder.RegisterType<StudentDao>().As<IStudentDao>().PropertiesAutowired();
             builder.RegisterType<ClassroomDao>().As<IClassroomDao>().PropertiesAutowired();
             builder.RegisterType<ClientDao>().As<IClientDao>().PropertiesAutowired();
+            builder.RegisterType<IRefreshTokenDao>().As<IRefreshTokenDao>().PropertiesAutowired();
         }
 
         private static void AddServices(ContainerBuilder builder)

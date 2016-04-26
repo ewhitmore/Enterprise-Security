@@ -261,7 +261,7 @@
     <Compile Include="Services\StudentService.cs" />
     <Compile Include="Services\TeacherService.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Utils\ChallengeResult.cs" />
+    <Compile Include="Controllers\ChallengeResult.cs" />
     <Compile Include="Utils\Helper.cs" />
   </ItemGroup>
   <ItemGroup>

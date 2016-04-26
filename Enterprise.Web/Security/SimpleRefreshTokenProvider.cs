@@ -46,7 +46,7 @@ namespace Enterprise.Web.Security
             // Create RefreshToken
             var token = new RefreshToken()
             {
-                Id = Helper.GetHash(refreshTokenId),
+                ReferenceId = Helper.GetHash(refreshTokenId),
                 ClientId = clientid,
                 Subject = context.Ticket.Identity.Name,
                 IssuedUtc = DateTime.UtcNow,
@@ -82,7 +82,7 @@ namespace Enterprise.Web.Security
             string hashedTokenId = Helper.GetHash(context.Token);
 
             // Get Token if it exists
-            var refreshToken = Session.QueryOver<RefreshToken>().Where(x => x.Id == hashedTokenId).SingleOrDefault<RefreshToken>();
+            var refreshToken = Session.QueryOver<RefreshToken>().Where(x => x.ReferenceId == hashedTokenId).SingleOrDefault<RefreshToken>();
 
             // If token exists pull protectedTicket to make new token and remove current token from database
             if (refreshToken != null)

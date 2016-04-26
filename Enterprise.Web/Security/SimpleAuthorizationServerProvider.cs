@@ -46,7 +46,7 @@ namespace Enterprise.Web.Security
             }
 
             // Get Client by Id
-            var client = Session.QueryOver<Client>().Where(c => c.Id == clientId).SingleOrDefault();
+            var client = Session.QueryOver<Client>().Where(c => c.ClientId == clientId).SingleOrDefault();
 
             // Client Validation Checks
             if (client == null)

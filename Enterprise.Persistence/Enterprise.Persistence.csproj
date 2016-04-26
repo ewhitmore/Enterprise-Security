@@ -81,6 +81,8 @@
   <ItemGroup>
     <Compile Include="Dao\Implementation\ClientDao.cs" />
     <Compile Include="Dao\IClientDao.cs" />
+    <Compile Include="Dao\Implementation\RefreshTokenDao.cs" />
+    <Compile Include="Dao\IRefreshTokenDao.cs" />
     <Compile Include="Dao\Mapping\ClientMap.cs" />
     <Compile Include="Dao\Mapping\RefreshTokenMap.cs" />
     <Compile Include="Model\ApplicationUser.cs" />
