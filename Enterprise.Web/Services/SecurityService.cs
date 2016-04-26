@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 using Enterprise.Model;
+using Enterprise.Persistence.Dao;
 using Enterprise.Persistence.Model;
 using Microsoft.AspNet.Identity;
 using NHibernate;
@@ -16,12 +17,17 @@ namespace Enterprise.Web.Services
     public sealed class SecurityService : ISecurityService
     {
         public ISession Session { get; set; }
+        public IRefreshTokenDao RefreshTokenDao { get; set; }
+        public IClientDao ClientDao { get; set; }
         private UserManager<ApplicationUser> UserManager { get; set; }
         private RoleManager<IdentityRole> RoleManager { get; set; }
 
-        public SecurityService(ISession session)
+
+
+        public SecurityService(ISession session, IRefreshTokenDao refreshTokenDao)
         {
             Session = session;
+            RefreshTokenDao = refreshTokenDao;
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(session));
             RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(session));
         }
@@ -102,111 +108,54 @@ namespace Enterprise.Web.Services
             return UserManager.AddPassword(user.Id, password);
         }
 
-
-
-
-        // FROM OTHER PROJECT
-        public IdentityResult RegisterUser(ApplicationUser applicationUser)
-        {
-            ApplicationUser user = new ApplicationUser
-            {
-                UserName = applicationUser.UserName
-                
-                
-            };
-
-            var result = UserManager.Create(user, applicationUser.Password);
-
-            return result;
-        }
-
         public IdentityUser FindUser(string userName, string password)
         {
-            IdentityUser user = UserManager.Find(userName, password);
-
-            return user;
+            return UserManager.Find(userName, password);
         }
 
         public Client FindClient(string clientId)
         {
-            //var client = _ctx.Clients.Find(clientId);
-            var client = Session.QueryOver<Client>().Where(c => c.ClientId.ToString() == clientId).SingleOrDefault();
-
-            return client;
+            return ClientDao.FindAll().SingleOrDefault(c => c.ClientId.ToString() == clientId);
         }
 
         public RefreshToken AddRefreshToken(RefreshToken token)
         {
+            var existingToken = RefreshTokenDao.FindAll()
+                    .FirstOrDefault(r => r.Subject == token.Subject && r.ClientId == token.ClientId);
 
-            //var existingToken = _ctx.RefreshTokens.Where(r => r.Subject == token.Subject && r.ClientId == token.ClientId).SingleOrDefault();
-            var existingToken = Session.QueryOver<RefreshToken>().Where(r => r.Subject == token.Subject && r.ClientId == token.ClientId).SingleOrDefault();
 
             if (existingToken != null)
             {
                 RemoveRefreshToken(existingToken);
             }
 
-            //_ctx.RefreshTokens.Add(token);
             Session.Save(token);
             return token;
-            //return await _ctx.SaveChangesAsync() > 0;
         }
 
-        public bool RemoveRefreshToken(string refreshTokenId)
+        public bool RemoveRefreshToken(string referenceId)
         {
-            //var refreshToken = await _ctx.RefreshTokens.FindAsync(refreshTokenId);
+            var refreshToken = FindRefreshToken(referenceId);
 
-            //if (refreshToken != null)
-            //{
-            //    RemoveRefreshToken(refreshToken);
-            //    return await _ctx.SaveChangesAsync() > 0;
-            //}
+            if (refreshToken == null) return false;
 
-            //return false;
-
-            RemoveRefreshToken(FindRefreshToken(refreshTokenId));
-
+            RemoveRefreshToken(refreshToken);
             return true;
         }
 
         public void RemoveRefreshToken(RefreshToken refreshToken)
         {
-            //_ctx.RefreshTokens.Remove(refreshToken);
-            //return await _ctx.SaveChangesAsync() > 0;
-
-            Session.Delete(refreshToken);
-
+            RefreshTokenDao.Delete(refreshToken);
         }
 
-        public RefreshToken FindRefreshToken(string refreshTokenId)
+        public RefreshToken FindRefreshToken(string referenceId)
         {
-            return Session.QueryOver<RefreshToken>().Where(r => r.ReferenceId == refreshTokenId).SingleOrDefault(); 
+            return RefreshTokenDao.FindAll().SingleOrDefault(r => r.ReferenceId == referenceId);
         }
 
         public List<RefreshToken> GetAllRefreshTokens()
         {
-            return new List<RefreshToken>(Session.CreateCriteria(typeof(RefreshToken)).List<RefreshToken>());
-        }
-
-        public async Task<IdentityUser> FindAsync(UserLoginInfo loginInfo)
-        {
-            IdentityUser user = await UserManager.FindAsync(loginInfo);
-
-            return user;
-        }
-
-        public async Task<IdentityResult> CreateAsync(ApplicationUser user)
-        {
-            var result = await UserManager.CreateAsync(user);
-
-            return result;
-        }
-
-        public async Task<IdentityResult> AddLoginAsync(string userId, UserLoginInfo login)
-        {
-            var result = await UserManager.AddLoginAsync(userId, login);
-
-            return result;
+            return RefreshTokenDao.GetAll().ToList();
         }
     }
 }

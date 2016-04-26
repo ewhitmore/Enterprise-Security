@@ -33,15 +33,5 @@ namespace Enterprise.Web.Controllers
             SecurityService.InitalizeSecurity();
         }
 
-        [HttpGet]
-        [Route("SeedSecurityRegisterUser")]
-        public IHttpActionResult SeedSecurityRegisterUser()
-        {
-            SecurityService.RegisterUser(new ApplicationUser { UserName = "ewhitmore", Password = "NEWPASS" });
-
-            return Ok("User Created");
-        }
-
-
     }
 }

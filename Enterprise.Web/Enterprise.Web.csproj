@@ -236,7 +236,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ClassroomController.cs" />
     <Compile Include="Controllers\RefreshTokensController.cs" />
-    <Compile Include="Controllers\SecurityController.cs" />
     <Compile Include="Controllers\SeedController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Controllers\TeacherController.cs" />
@@ -263,6 +262,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Controllers\ChallengeResult.cs" />
     <Compile Include="Utils\Helper.cs" />
+    <Compile Include="Utils\ValidateModelStateAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\layout\home.tpl.html" />
