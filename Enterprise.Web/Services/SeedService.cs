@@ -4,6 +4,7 @@ using Enterprise.Model;
 using Enterprise.Persistence;
 using Enterprise.Persistence.Dao;
 using Enterprise.Persistence.Model;
+using Enterprise.Web.Utils;
 using Microsoft.AspNet.Identity;
 using NHibernate.AspNet.Identity;
 
@@ -12,8 +13,9 @@ namespace Enterprise.Web.Services
     public class SeedService : ISeedService
     {
         public IClassroomDao ClassroomDao { private get; set; }
+        public IClientDao ClientDao { private get; set; }
 
-
+        public ISecurityService SecurityService { get; set; }
 
         public void Seed()
         {
@@ -68,6 +70,21 @@ namespace Enterprise.Web.Services
 
             ClassroomDao.Save(classroom);
 
+
+            var client = new Client()
+            {
+                Id = "ngAuthApp",
+                Secret = Helper.GetHash("abc@123"),
+                Name = "AngularJS front-end Application",
+                ApplicationType = ApplicationTypes.JavaScript,
+                Active = true,
+                RefreshTokenLifeTime = 7200,
+                AllowedOrigin = "*"
+            };
+
+            ClientDao.Save(client);
+
+            SecurityService.CreateUser("user@localhost", "ewhitmore", "ewhitmore");
         }
     }
 }

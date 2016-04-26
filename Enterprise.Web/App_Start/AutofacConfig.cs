@@ -2,6 +2,7 @@
 using System.Web;
 using System.Web.Http;
 using Autofac;
+using Autofac.Builder;
 using Autofac.Integration.WebApi;
 using Enterprise.Persistence;
 using Enterprise.Persistence.Dao;
@@ -10,6 +11,7 @@ using Enterprise.Persistence.Model;
 using Enterprise.Web.Security;
 using Enterprise.Web.Services;
 using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security.Infrastructure;
 using Microsoft.Owin.Security.OAuth;
 using NHibernate;
 using NHibernate.AspNet.Identity;
@@ -28,11 +30,10 @@ namespace Enterprise.Web
             // Register Controllers
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly()).PropertiesAutowired();
 
-   
+
             // Indicates a web based implementation
             builder.RegisterInstance(HibernateConfig.CreateSessionFactory("EnterpriseSecurityDatabase", "web"));
             builder.Register(s => s.Resolve<ISessionFactory>().OpenSession()).InstancePerRequest();
-
 
             // Add Peristance Configuration
             RegisterPersistanceLayer(builder);
@@ -48,20 +49,6 @@ namespace Enterprise.Web
 
             // Set the dependency resolver to be Autofac.
             Container = builder.Build();
-
-            
-
-        }
-
-        private static void AddOther(ContainerBuilder builder)
-        {
-            //http://stackoverflow.com/questions/25871392/autofac-dependency-injection-in-implementation-of-oauthauthorizationserverprovid
-
-            builder
-              .RegisterType<SimpleAuthorizationServerProvider>()
-              .As<IOAuthAuthorizationServerProvider>()
-              //.PropertiesAutowired() // to automatically resolve IUserService
-              .SingleInstance(); // you only need one instance of this provider
         }
 
         public static void RegisterAutofac(ISessionFactory sessionFactory)
@@ -105,6 +92,7 @@ namespace Enterprise.Web
             builder.RegisterType<TeacherDao>().As<ITeacherDao>().PropertiesAutowired();
             builder.RegisterType<StudentDao>().As<IStudentDao>().PropertiesAutowired();
             builder.RegisterType<ClassroomDao>().As<IClassroomDao>().PropertiesAutowired();
+            builder.RegisterType<ClientDao>().As<IClientDao>().PropertiesAutowired();
         }
 
         private static void AddServices(ContainerBuilder builder)
@@ -131,6 +119,25 @@ namespace Enterprise.Web
                     .InstancePerLifetimeScope();
 
             }
+        }
+
+        private static void AddOther(ContainerBuilder builder)
+        {
+            //http://stackoverflow.com/questions/25871392/autofac-dependency-injection-in-implementation-of-oauthauthorizationserverprovid
+
+            builder
+                .RegisterType<SimpleAuthorizationServerProvider>()
+                .As<IOAuthAuthorizationServerProvider>()
+                //.PropertiesAutowired()
+                .SingleInstance()
+                ; // you only need one instance of this provider
+
+
+            builder
+                .RegisterType<SimpleRefreshTokenProvider>()
+                .As<IAuthenticationTokenProvider>()
+                //.PropertiesAutowired()
+                .SingleInstance();  // you only need one instance of this provider
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ using NHibernate.AspNet.Identity;
 
 namespace Enterprise.Web.Security
 {
-    public class SimpleAuthorizationServerProvider : OAuthAuthorizationServerProvider, ISimpleAuthorizationServerProvider
+    public class SimpleAuthorizationServerProvider : OAuthAuthorizationServerProvider, ISimpleAuthorizationServerProvider, IDisposable
     {
         public ISession Session { get; set; }
 
@@ -160,5 +161,9 @@ namespace Enterprise.Web.Security
             return Task.FromResult<object>(null);
         }
 
+        public void Dispose()
+        {
+            Session.Dispose();
+        }
     }
 }

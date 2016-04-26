@@ -1,4 +1,6 @@
-﻿namespace Enterprise.Model
+﻿using System;
+
+namespace Enterprise.Model
 {
     public class Client
     {

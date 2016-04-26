@@ -1,19 +1,26 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Enterprise.Model;
-using Enterprise.Web.Services;
+using Enterprise.Persistence;
 using Enterprise.Web.Utils;
 using Microsoft.Owin.Security.Infrastructure;
 using NHibernate;
 
 namespace Enterprise.Web.Security
 {
-    public class SimpleRefreshTokenProviderService : IAuthenticationTokenProvider
+    /// <summary>
+    /// Called by startup class to handle Refresh Tokens
+    /// </summary>
+    public class SimpleRefreshTokenProvider : IAuthenticationTokenProvider, IDisposable
     {
         public ISession Session { get; set; }
 
-        public ISecurityService SecurityService { get; set; }
+        //public ISecurityService SecurityService { get; set; }
+
+        public SimpleRefreshTokenProvider()
+        {
+            Session = HibernateConfig.CreateSessionFactory("EnterpriseSecurityDatabase", "web").OpenSession();
+        }
 
         public async Task CreateAsync(AuthenticationTokenCreateContext context)
         {
@@ -26,12 +33,12 @@ namespace Enterprise.Web.Security
 
             var refreshTokenId = Guid.NewGuid().ToString("n");
 
-
             var refreshTokenLifeTime = context.OwinContext.Get<string>("as:clientRefreshTokenLifeTime");
 
             var token = new RefreshToken()
             {
                 Id = Helper.GetHash(refreshTokenId),
+                //Id = Guid.NewGuid(),
                 ClientId = clientid,
                 Subject = context.Ticket.Identity.Name,
                 IssuedUtc = DateTime.UtcNow,
@@ -43,9 +50,9 @@ namespace Enterprise.Web.Security
 
             token.ProtectedTicket = context.SerializeTicket();
 
-            var result = SecurityService.AddRefreshToken(token);
+            var result = AddRefreshToken(token);
 
-            if (result.Id.Any())
+            if (result != null)
             {
                 context.SetToken(refreshTokenId);
             }
@@ -61,13 +68,19 @@ namespace Enterprise.Web.Security
 
             string hashedTokenId = Helper.GetHash(context.Token);
 
-            var refreshToken = SecurityService.FindRefreshToken(hashedTokenId);
+
+            //todo: thji
+            //var refreshToken = Session.QueryOver<RefreshToken>().Where(r => r.Id.ToString() == hashedTokenId).SingleOrDefault();
+            var refreshToken = Session.QueryOver<RefreshToken>().Where(x => x.Id == hashedTokenId).SingleOrDefault<RefreshToken>();
+
+
+
 
             if (refreshToken != null)
             {
                 //Get protectedTicket from refreshToken class
                 context.DeserializeTicket(refreshToken.ProtectedTicket);
-                var result = SecurityService.RemoveRefreshToken(hashedTokenId);
+                Session.Delete(refreshToken);
             }
 
 
@@ -81,6 +94,31 @@ namespace Enterprise.Web.Security
         public void Receive(AuthenticationTokenReceiveContext context)
         {
             throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            Session.Dispose();
+        }
+
+
+        private RefreshToken AddRefreshToken(RefreshToken token)
+        {
+            //var existingToken = _ctx.RefreshTokens.Where(r => r.Subject == token.Subject && r.ClientId == token.ClientId).SingleOrDefault();
+            var existingToken = Session.QueryOver<RefreshToken>().Where(r => r.Subject == token.Subject && r.ClientId == token.ClientId).SingleOrDefault();
+
+            if (existingToken != null)
+            {
+
+                Session.Delete(existingToken);
+                
+            }
+
+            //_ctx.RefreshTokens.Add(token);
+            Session.Save(token);
+            Session.Flush();
+            return token;
+            //return await _ctx.SaveChangesAsync() > 0;
         }
     }
 }

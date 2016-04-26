@@ -50,7 +50,7 @@ namespace Enterprise.Web
                 AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(30),
                 //Provider = new SimpleAuthorizationServerProviderService(),
                 Provider = AutofacConfig.Container.Resolve<IOAuthAuthorizationServerProvider>(),
-                RefreshTokenProvider = new SimpleRefreshTokenProviderService()
+                RefreshTokenProvider = new SimpleRefreshTokenProvider()
                
             };
 
