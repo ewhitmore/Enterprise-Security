@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Enterprise.Model;
 using Enterprise.Persistence.Dao;
@@ -21,8 +20,6 @@ namespace Enterprise.Web.Services
         public IClientDao ClientDao { get; set; }
         private UserManager<ApplicationUser> UserManager { get; set; }
         private RoleManager<IdentityRole> RoleManager { get; set; }
-
-
 
         public SecurityService(ISession session, IRefreshTokenDao refreshTokenDao)
         {
