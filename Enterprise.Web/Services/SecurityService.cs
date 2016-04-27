@@ -62,27 +62,26 @@ namespace Enterprise.Web.Services
         /// <summary>
         /// Setup Inital Admin user with password "TheAdminPass".  Will only run if Admin account doesn't already exist
         /// </summary>
-        public void InitalizeSecurity()
+        public IdentityResult InitalizeSecurity()
         {
-            if (!UserExists("Admin"))
+            if (UserExists("Admin")) return new IdentityResult("Admin already exists");
+
+            var createUserResults = CreateUser("admin@localhost", "Admin", "TheAdminPass");
+
+            if (!createUserResults.Succeeded)
             {
-                var createUserResults = CreateUser("admin@localhost", "Admin", "TheAdminPass");
-
-                if (!createUserResults.Succeeded)
-                {
-                    throw new Exception(string.Concat(createUserResults.Errors));
-                }
-
-                var createRoleResults = CreateRole("SysAdmin");
-
-                if (!createRoleResults.Succeeded)
-                {
-                    throw new Exception(string.Concat(createRoleResults.Errors));
-                }
-
-                var user = UserManager.FindByName("Admin");
-                UserManager.AddToRole(user.Id, "SysAdmin");
+                return new IdentityResult(string.Concat(createUserResults.Errors, ","));
             }
+
+            var createRoleResults = CreateRole("SysAdmin");
+
+            if (!createRoleResults.Succeeded)
+            {
+                return new IdentityResult(string.Concat(createRoleResults.Errors, ","));
+            }
+
+            var user = UserManager.FindByName("Admin");
+            return UserManager.AddToRole(user.Id, "SysAdmin");
         }
 
         /// <summary>
@@ -108,16 +107,32 @@ namespace Enterprise.Web.Services
             return UserManager.AddPassword(user.Id, password);
         }
 
+        /// <summary>
+        /// Find user by username and password
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public IdentityUser FindUser(string userName, string password)
         {
             return UserManager.Find(userName, password);
         }
 
+        /// <summary>
+        /// Find client by client identifier
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <returns></returns>
         public Client FindClient(string clientId)
         {
             return ClientDao.FindAll().SingleOrDefault(c => c.ClientId.ToString() == clientId);
         }
 
+        /// <summary>
+        /// Replace refresh token if one exists otherwise add
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public RefreshToken AddRefreshToken(RefreshToken token)
         {
             var existingToken = RefreshTokenDao.FindAll()
@@ -133,6 +148,11 @@ namespace Enterprise.Web.Services
             return token;
         }
 
+        /// <summary>
+        /// Returns true if toek was removed from database
+        /// </summary>
+        /// <param name="referenceId"></param>
+        /// <returns></returns>
         public bool RemoveRefreshToken(string referenceId)
         {
             var refreshToken = FindRefreshToken(referenceId);
@@ -143,16 +163,29 @@ namespace Enterprise.Web.Services
             return true;
         }
 
+        /// <summary>
+        /// Delete Refresh Token from database
+        /// </summary>
+        /// <param name="refreshToken"></param>
         public void RemoveRefreshToken(RefreshToken refreshToken)
         {
             RefreshTokenDao.Delete(refreshToken);
         }
 
+        /// <summary>
+        /// Get Refresh Token by ReferenceId
+        /// </summary>
+        /// <param name="referenceId"></param>
+        /// <returns></returns>
         public RefreshToken FindRefreshToken(string referenceId)
         {
-            return RefreshTokenDao.FindAll().SingleOrDefault(r => r.ReferenceId == referenceId);
+            return RefreshTokenDao.FindAll().FirstOrDefault(r => r.ReferenceId == referenceId);
         }
 
+        /// <summary>
+        /// Get All Refresh Tokens
+        /// </summary>
+        /// <returns></returns>
         public List<RefreshToken> GetAllRefreshTokens()
         {
             return RefreshTokenDao.GetAll().ToList();

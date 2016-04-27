@@ -28,9 +28,10 @@ namespace Enterprise.Web.Controllers
 
         [HttpGet]
         [Route("init")]
-        public void Init()
+        public IHttpActionResult Init()
         {
-            SecurityService.InitalizeSecurity();
+            var results = SecurityService.InitalizeSecurity();
+            return Ok(results);
         }
 
     }

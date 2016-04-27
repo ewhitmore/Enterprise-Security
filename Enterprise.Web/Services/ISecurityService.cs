@@ -27,7 +27,7 @@ namespace Enterprise.Web.Services
         /// <summary>
         /// Setup Inital Admin user with password "TheAdminPass".  Will only run if Admin account doesn't already exist
         /// </summary>
-        void InitalizeSecurity();
+        IdentityResult InitalizeSecurity();
 
         /// <summary>
         /// Returns true if the user exists in the database

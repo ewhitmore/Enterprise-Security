@@ -7,7 +7,7 @@ namespace Enterprise.Web.Tests.Utils
     public class HelperTests
     {
         [TestMethod()]
-        public void GetHashTest()
+        public void HelperTests_GetHash_ReturnTrue()
         {
             // Arrange
             const string sha256HashOfMySecret = "SVYs/DsXE56gHEgLnIai3ayzj/Gy6dsb9murek4/H7U=";

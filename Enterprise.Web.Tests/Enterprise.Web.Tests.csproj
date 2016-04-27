@@ -147,7 +147,6 @@
     <Compile Include="Services\StudentServiceUnitTests.cs" />
     <Compile Include="Services\TeacherServiceUnitTests.cs" />
     <Compile Include="Services\ClassroomServiceUnitTests.cs" />
-    <Compile Include="Services\SecurityServiceUnitTests.cs" />
     <Compile Include="TestingSessionFactory.cs" />
     <Compile Include="Utils\HelperTests.cs" />
   </ItemGroup>
