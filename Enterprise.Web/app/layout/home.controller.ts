@@ -1,52 +1,54 @@
 ﻿module App.Layout {
     'use strict';
 
-    import Teacher = App.Teacher.ITeacherDto;
-    import AuthDataDto = App.Blocks.AuthDataDto;
-
     interface IHomeScope {
         // Properties
         fullname: string;
-        teachers: Teacher[];
+        teachers: App.Teacher.ITeacherDto[];
+        authDataDto: Blocks.IAuthDataDto;
 
         // Methods
-        getall(): angular.IPromise<Teacher[]>;
-        login(): angular.IPromise<any>;
-        check() : void;
+        getall(): angular.IPromise<App.Teacher.ITeacherDto[]>;
+        //login(username: string, password: string, refreshTokens: boolean): angular.IPromise<any>;
+        submit(authDataDto: Blocks.IAuthDataDto) : void;
       
     }
 
     class HomeController implements IHomeScope {
 
         fullname: string;
-        teachers: Teacher[];
+        teachers: Teacher.ITeacherDto[];
+        authDataDto = {} as Blocks.IAuthDataDto;
 
         static $inject = ['app.teacher.teacherService', 'app.blocks.authenticationService'];
-        constructor(private teacherService: App.Teacher.ITeacherService, private authenticationService: App.Blocks.IAuthenicationService) {
+        constructor(private teacherService: Teacher.ITeacherService, private authenticationService: Blocks.IAuthenicationService) {
             var vm = this;
 
             vm.fullname = "Eric Whitmore";
             vm.getall().then(results => {
                 vm.teachers = results;
             });
-
-           
         }
 
-        getall(): angular.IPromise<App.Teacher.ITeacherDto[]> {
+        getall(): angular.IPromise<Teacher.ITeacherDto[]> {
             return this.teacherService.getAll();
         }
 
-        login(): angular.IPromise<any> {
-            var data = new AuthDataDto();
 
-            return this.authenticationService.login(data);
-        }
 
-        check(): void {
-            this.login().then(data => {
-                console.log(data);
-            });
+        //login(username: string, password: string, refreshTokens: boolean): angular.IPromise<any> {
+        //    var authDataDto = {
+        //        userName: username,
+        //        password: password,
+        //        useRefreshTokens: refreshTokens
+        //    } as Blocks.IAuthDataDto;
+
+        //    return this.authenticationService.login(authDataDto);
+        //}
+
+        submit(authDataDto: Blocks.IAuthDataDto): void {
+        console.log(authDataDto);
+            this.authenticationService.login(authDataDto);
         }
 
 

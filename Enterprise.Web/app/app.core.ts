@@ -10,7 +10,8 @@
             ,'ngCookies'
 
             // 3rd Party Modules
-             ,'ui.bootstrap'
+            , 'ui.bootstrap'
+            , 'LocalStorageModule'
 
         ]);
 }

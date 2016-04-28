@@ -1148,7 +1148,6 @@
     <TypeScriptCompile Include="app\blocks\authentication\authenication.provider.ts" />
     <TypeScriptCompile Include="app\blocks\authentication\authentication.config.ts" />
     <TypeScriptCompile Include="app\blocks\authentication\authentication.service.ts" />
-    <TypeScriptCompile Include="app\blocks\authentication\token.ts" />
     <TypeScriptCompile Include="app\blocks\blocks.module.ts" />
     <TypeScriptCompile Include="app\layout\home.controller.ts" />
     <TypeScriptCompile Include="app\layout\layout.module.ts" />
