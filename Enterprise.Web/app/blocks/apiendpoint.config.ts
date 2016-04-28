@@ -1,11 +1,12 @@
 ﻿module App.Blocks {
-    'use static';
+    "use static";
 
-    angular.module('app')
+    angular.module("app")
         .config(config);
 
-    config.$inject = ['app.blocks.ApiEndpointProvider'];
-    function config(apiEndpointProvider: Blocks.IApiendpointProvider): void {
-        apiEndpointProvider.configure('/api');
+    config.$inject = ["app.blocks.ApiEndpointProvider"];
+    function config(apiEndpointProvider: Blocks.IApiEndpointProvider): void {
+        // Configure the API server URL here
+        apiEndpointProvider.configure("/api");
     }
 }

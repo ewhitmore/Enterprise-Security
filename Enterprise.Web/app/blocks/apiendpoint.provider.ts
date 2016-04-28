@@ -1,15 +1,15 @@
 ﻿module App.Blocks {
-    'user strict';
+    "user strict";
 
     export interface IApiEndpointConfig {
         baseUrl: string;
     }
 
-    export interface IApiendpointProvider {
+    export interface IApiEndpointProvider {
         configure(baseUrl: string): void;
     }
 
-    class ApiendpointProvider implements angular.IServiceProvider, IApiendpointProvider {
+    class ApiEndpointProvider implements angular.IServiceProvider, IApiEndpointProvider {
         config: IApiEndpointConfig;
 
         configure(baseUrl: string): void {
@@ -25,8 +25,6 @@
     }
 
     angular
-        .module('app.blocks')
-        .provider('app.blocks.ApiEndpoint', ApiendpointProvider);
-
-
+        .module("app.blocks")
+        .provider("app.blocks.ApiEndpoint", ApiEndpointProvider);
 }

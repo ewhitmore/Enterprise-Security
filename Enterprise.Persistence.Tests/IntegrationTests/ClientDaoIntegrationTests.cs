@@ -35,7 +35,7 @@ namespace Enterprise.Persistence.Tests.IntegrationTests
             // Arrange
             var client = new Client()
             {
-                ClientId = "ngAuthApp",
+                ClientId = "AngularWebClient",
                 Active = true,
                 AllowedOrigin = "*",
                 ApplicationType = ApplicationTypes.JavaScript,

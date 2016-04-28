@@ -73,7 +73,7 @@ namespace Enterprise.Web.Services
 
             var client = new Client()
             {
-                ClientId = "ngAuthApp",
+                ClientId = "AngularWebClient",
                 Secret = Helper.GetHash("abc@123"),
                 Name = "AngularJS front-end Application",
                 ApplicationType = ApplicationTypes.JavaScript,
