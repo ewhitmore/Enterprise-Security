@@ -2,13 +2,13 @@
     'use static';
 
     export interface IAuthenicationService {
-        authDataDto : IAuthDataDto;
+        authDataDto: IAuthDataDto;
         login(authDataDto: IAuthDataDto): angular.IPromise<any>;
         logout(): void;
         fillAuthData(): void;
-        refreshToken(authDataDto: IAuthDataDto): angular.IPromise<any>;
+        refreshToken(): angular.IPromise<any>;
     }
-    
+
     export class AuthenticationService {
 
         authDataDto: IAuthDataDto;
@@ -29,13 +29,13 @@
         /** Authenticate Client */
         login(authDto: IAuthDataDto): angular.IPromise<any> {
             this.authDataDto = authDto;
-           
+
             var data = "grant_type=password&username=" + this.authDataDto.userName + "&password=" + this.authDataDto.password;
 
             if (this.authDataDto.useRefreshTokens) {
                 data = data + "&client_id=AngularWebClient";
             }
-            
+
             return this.$http
                 .post('/token', data, "{ headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }")
                 .then((response: angular.IHttpPromiseCallbackArg<any>): any => {
@@ -53,7 +53,7 @@
                         this.fillAuthData();
                         return response.data;
 
-                    // Failure
+                        // Failure
                     } else {
                         this.logout();
                         return response.data;
@@ -83,7 +83,7 @@
         }
 
         /** Get new Refresh Token */
-        refreshToken(authDto: IAuthDataDto): angular.IPromise<any> {
+        refreshToken(): angular.IPromise<any> {
 
             var authData = this.localStorageService.get('authorizationData');
             if (authData['useRefreshTokens']) {
@@ -107,14 +107,8 @@
                             return response.data;
                         }
                     });
-
             }
-
-
-
         }
-
-
     }
 
 

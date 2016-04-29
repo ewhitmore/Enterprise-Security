@@ -49,7 +49,7 @@ namespace Enterprise.Web
             {
                 AllowInsecureHttp = true,
                 TokenEndpointPath = new PathString("/token"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(30),
+                AccessTokenExpireTimeSpan = TimeSpan.FromSeconds(10),
                 Provider = AutofacConfig.Container.Resolve<IOAuthAuthorizationServerProvider>(),
                 RefreshTokenProvider = new SimpleRefreshTokenProvider()
                

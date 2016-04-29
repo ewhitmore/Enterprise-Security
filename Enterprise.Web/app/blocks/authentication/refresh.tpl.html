@@ -1,0 +1,35 @@
+﻿
+<div class="row">
+    <div class="col-md-3">
+        &nbsp;
+    </div>
+    <div class="col-md-6">
+        <p ng-hide="vm.authDataDto.useRefreshTokens">
+            User <strong>{{vm.authDataDto.userName}}</strong> has disabled <strong>Refresh Tokens</strong> once logged in, you can not refresh tokens.
+        </p>
+
+        <div ng-show="vm.authDataDto.useRefreshTokens">
+            <p class="text-success">Use this view to obtain new access token using the refresh token.</p>
+            <p>User 
+            <strong>{{vm.authDataDto.userName}}</strong> has enabled <strong>Refresh Tokens</strong> once logged in, to refresh your current access token click on the button below.
+            </p>
+            <button class="btn btn-lg btn-info btn-block" type="submit" ng-click="vm.refreshToken()" ng-disabled="!vm.authDataDto.userName && !vm.authDataDto.useRefreshTokens">Refresh Token</button>
+        </div>
+
+        <div ng-show="vm.authDataDto.useRefreshTokens" style="margin-top:10px;">
+            <div class="panel panel-success" ng-show="vm.tokenRefreshed">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Successfully refreshed Access Token</h3>
+                </div>
+                <div class="panel-body">
+                    <p>Access_token: {{vm.tokenResponse.access_token | limitTo : 10}}....</p>
+                    <p><a href="/home">Click here to homepage</a></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-3">
+        &nbsp;
+    </div>
+</div>
