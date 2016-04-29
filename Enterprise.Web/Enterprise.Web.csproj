@@ -266,6 +266,7 @@
     <Compile Include="Utils\ValidateModelStateAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\blocks\authentication\login.tpl.html" />
     <Content Include="app\layout\home.tpl.html" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -1148,10 +1149,12 @@
     <TypeScriptCompile Include="app\blocks\authentication\authenication.provider.ts" />
     <TypeScriptCompile Include="app\blocks\authentication\authentication.config.ts" />
     <TypeScriptCompile Include="app\blocks\authentication\authentication.service.ts" />
+    <TypeScriptCompile Include="app\blocks\authentication\login.controller.ts" />
     <TypeScriptCompile Include="app\blocks\blocks.module.ts" />
     <TypeScriptCompile Include="app\layout\home.controller.ts" />
     <TypeScriptCompile Include="app\layout\layout.module.ts" />
     <TypeScriptCompile Include="app\layout\navigation.controller.ts" />
+    <TypeScriptCompile Include="app\services\authInterceptor.service.ts" />
     <TypeScriptCompile Include="app\services\services.module.ts" />
     <TypeScriptCompile Include="app\teacher\teacher.module.ts" />
     <TypeScriptCompile Include="app\teacher\teacher.service.ts" />

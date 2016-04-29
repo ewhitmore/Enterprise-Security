@@ -9,11 +9,12 @@
         refreshToken(authDataDto: IAuthDataDto): angular.IPromise<any>;
     }
     
-    class AuthenticationService {
+    export class AuthenticationService {
 
         authDataDto: IAuthDataDto;
 
-        constructor(private $http: angular.IHttpService,
+        constructor(
+            private $http: angular.IHttpService,
             private apiEndpoint: Blocks.IApiEndpointConfig,
             private localStorageService: angular.local.storage.ILocalStorageService) {
 
@@ -49,6 +50,7 @@
                         else {
                             this.localStorageService.set('authorizationData', { token: response.data.access_token, userName: response.data.userName, refreshToken: "", useRefreshTokens: false });
                         }
+                        this.fillAuthData();
                         return response.data;
 
                     // Failure

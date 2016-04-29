@@ -7,7 +7,8 @@
     function routeConfig($routeProvider: angular.route.IRouteProvider): void {
         $routeProvider
             
-            .when("/", { templateUrl: '/app/layout/home.tpl.html', controller:'app.layout.homeController', controllerAs: 'vm' })
+            .when("/", { templateUrl: '/app/layout/home.tpl.html', controller: 'app.layout.homeController', controllerAs: 'vm' })
+            .when("/login", { templateUrl: '/app/blocks/authentication/login.tpl.html', controller: 'app.blocks.loginController', controllerAs: 'vm' })
             .otherwise("/");
         
     }

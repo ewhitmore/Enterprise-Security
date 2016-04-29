@@ -1,0 +1,21 @@
+﻿<form role="form">
+    <div class="row">
+        <div class="col-md-4">
+            &nbsp;
+        </div>
+        <div class="col-md-4">
+            <h2 class="form-login-heading">Login</h2>
+            <input type="text" class="form-control" placeholder="Username" ng-model="vm.authDataDto.userName" required autofocus>
+            <input type="password" class="form-control" placeholder="Password" ng-model="vm.authDataDto.password" required>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="vm.authDataDto.useRefreshTokens"><strong> Use Refresh Tokens</strong>
+                </label>
+            </div>
+            <button class="btn btn-md btn-info btn-block" ng-click="vm.login(vm.authDataDto)">Login</button>
+            <div ng-hide="vm.message == null" class="alert alert-danger">
+                {{vm.message}}
+            </div>
+        </div>
+    </div>
+</form>
