@@ -3,35 +3,36 @@
 
     interface IHomeScope {
         // Properties
-        teachers: App.Teacher.ITeacherDto[];
+        students: Student.IStudentDto[];
 
         // Methods
-        getall(): angular.IPromise<App.Teacher.ITeacherDto[]>;
-
+        getall(): void;
+        save(teacher: Teacher.ITeacherDto): void;
        
     }
 
     class HomeController implements IHomeScope {
 
         fullname: string;
-        teachers: Teacher.ITeacherDto[];
+        students: Student.IStudentDto[];
         authDataDto = {} as Blocks.IAuthDataDto;
 
-        static $inject = ['app.teacher.teacherService'];
-        constructor(private teacherService: Teacher.ITeacherService) {
-            var vm = this;
+        static $inject = ['app.teacher.teacherService', 'app.student.studentService'];
+        constructor(private teacherService: Teacher.ITeacherService, private studentService: Student.IStudentService) {
+            this.getall();
+        }
 
-            vm.getall().then(results => {
-                vm.teachers = results;
+        getall(): void {
+            this.studentService.getAll().then(students => {
+                this.students = students;
             });
         }
 
-        getall(): angular.IPromise<Teacher.ITeacherDto[]> {
-            return this.teacherService.getAll();
+        save(student: Student.IStudentDto): void {
+            this.studentService.save(student).then(() => {
+                this.getall();
+            });
         }
-
-
-
     }
 
     // Hook my ts class into an angularjs module

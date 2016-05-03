@@ -1158,6 +1158,9 @@
     <TypeScriptCompile Include="app\layout\navigation.controller.ts" />
     <TypeScriptCompile Include="app\services\authInterceptor.service.ts" />
     <TypeScriptCompile Include="app\services\services.module.ts" />
+    <TypeScriptCompile Include="app\student\student.module.ts" />
+    <TypeScriptCompile Include="app\student\student.service.ts" />
+    <TypeScriptCompile Include="app\student\studentDto.ts" />
     <TypeScriptCompile Include="app\teacher\teacher.module.ts" />
     <TypeScriptCompile Include="app\teacher\teacher.service.ts" />
     <TypeScriptCompile Include="app\teacher\teacher.test.ts" />

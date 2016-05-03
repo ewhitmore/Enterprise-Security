@@ -3,6 +3,7 @@
 
     export interface ITeacherService {
         getAll(): angular.IPromise<Teacher.ITeacherDto[]>;
+        save(teacherDto: Teacher.ITeacherDto): angular.IPromise<Teacher.ITeacherDto>;
     }
 
     class TeacherService implements ITeacherService {
@@ -12,6 +13,14 @@
             return this.$http
                 .get(this.apiEndpoint.baseUrl + '/v1/teacher/GetAll')
                 .then((response: angular.IHttpPromiseCallbackArg<ITeacherDto[]>): ITeacherDto[] => {
+                    return response.data;
+                });
+        }
+
+        save(teacherDto: Teacher.ITeacherDto): angular.IPromise<Teacher.ITeacherDto> {
+            return this.$http
+                .post(this.apiEndpoint.baseUrl + '/v1/teacher/',teacherDto)
+                .then((response: angular.IHttpPromiseCallbackArg<ITeacherDto>): ITeacherDto => {
                     return response.data;
                 });
         }

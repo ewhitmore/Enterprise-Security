@@ -13,6 +13,7 @@
 
             // Feature Modules
             , 'app.teacher' 
+            , 'app.student'
             
 
   

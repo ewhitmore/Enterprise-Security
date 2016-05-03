@@ -8,6 +8,7 @@ using Enterprise.Web.Services;
 
 namespace Enterprise.Web.Controllers
 {
+    [Authorize]
     [RoutePrefix("api/v1/teacher")]
     public class TeacherController : ApiController
     {
@@ -45,7 +46,6 @@ namespace Enterprise.Web.Controllers
         /// Get all students including ones that have been deleted
         /// </summary>
         /// <returns></returns>
-        [Authorize]
         [Route("GetAll")]
         [HttpGet]
         public IList<TeacherDto> GetAll()

@@ -8,6 +8,7 @@ using Enterprise.Web.Services;
 
 namespace Enterprise.Web.Controllers
 {
+    [Authorize]
     [RoutePrefix("api/v1/student")]
     public class StudentController : ApiController
     {

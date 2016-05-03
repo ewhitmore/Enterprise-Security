@@ -20,16 +20,16 @@
                 </tr>
             </thead>
             <tbody>
-                <!--<tr>
+                <tr>
                     <td></td>
                     <td></td>
-                    <td><input class="form-control" type="text" ng-model="vm.newLog.description"/></td>
-                    <td><button class="btn btn-primary" ng-click="vm.insert(vm.newLog)">Add</button></td>
-                </tr>-->
-                <tr ng-repeat="teacher in vm.teachers">
-                    <td>{{teacher.id}}</td>
-                    <td>{{teacher.fullName}}</td>
-                    <td>{{teacher.birthday | date:'medium'}}</td>
+                    <td></td>
+                    <td><button class="btn btn-primary" ng-click="vm.save({fullname:'test', birthday:'2016-01-01'})">Add</button></td>
+                </tr>
+                <tr ng-repeat="student in vm.students">
+                    <td>{{student.id}}</td>
+                    <td>{{student.fullName}}</td>
+                    <td>{{student.birthday | date:'medium'}}</td>
                     <td></td>
                 </tr>
             </tbody>

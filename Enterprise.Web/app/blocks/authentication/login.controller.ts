@@ -18,6 +18,7 @@
         login(authDataDto: Blocks.IAuthDataDto): void {
             this.authenticationService.login(authDataDto)
                 .then(() => {
+
                     this.$location.path('/home');
                 }, err => {
                     this.message = err.data.error_description;

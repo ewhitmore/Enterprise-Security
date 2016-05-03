@@ -15,6 +15,7 @@
 
         constructor(
             private $http: angular.IHttpService,
+            private $location: angular.ILocationService,
             private apiEndpoint: Blocks.IApiEndpointConfig,
             private localStorageService: angular.local.storage.ILocalStorageService) {
 
@@ -104,6 +105,7 @@
                             // Failure
                         } else {
                             this.logout();
+                            this.$location.path('/login');
                             return response.data;
                         }
                     });
@@ -115,11 +117,12 @@
 
     factory.$inject = [
         '$http',
+        '$location',
         'app.blocks.ApiEndpoint',
         'localStorageService'
     ];
-    function factory($http: angular.IHttpService, apiEndpoint: Blocks.IApiEndpointConfig, localStorageService: angular.local.storage.ILocalStorageService): IAuthenicationService {
-        return new AuthenticationService($http, apiEndpoint, localStorageService);
+    function factory($http: angular.IHttpService, $location: angular.ILocationService, apiEndpoint: Blocks.IApiEndpointConfig, localStorageService: angular.local.storage.ILocalStorageService): IAuthenicationService {
+        return new AuthenticationService($http, $location, apiEndpoint, localStorageService);
     }
 
     angular
