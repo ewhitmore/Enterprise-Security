@@ -16,6 +16,7 @@
         constructor(
             private $http: angular.IHttpService,
             private $location: angular.ILocationService,
+            private $q: angular.IQService,
             private apiEndpoint: Blocks.IApiEndpointConfig,
             private localStorageService: angular.local.storage.ILocalStorageService) {
 
@@ -37,29 +38,32 @@
                 data = data + "&client_id=AngularWebClient";
             }
 
-            return this.$http
+            var deferred = this.$q.defer();
+
+            this.$http
                 .post('/token', data, "{ headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }")
-                .then((response: angular.IHttpPromiseCallbackArg<any>): any => {
+
+                .success((response: any): any => {
                     // Remove Password from memory
                     this.authDataDto.password = "";
 
-                    // Success
-                    if (response.status === 200) {
-                        if (this.authDataDto.useRefreshTokens) {
-                            this.localStorageService.set('authorizationData', { token: response.data.access_token, userName: response.data.userName, refreshToken: response.data.refresh_token, useRefreshTokens: true });
-                        }
-                        else {
-                            this.localStorageService.set('authorizationData', { token: response.data.access_token, userName: response.data.userName, refreshToken: "", useRefreshTokens: false });
-                        }
-                        this.fillAuthData();
-                        return response.data;
-
-                        // Failure
-                    } else {
-                        this.logout();
-                        return response.data;
+                    if (this.authDataDto.useRefreshTokens) {
+                        this.localStorageService.set('authorizationData', { token: response.access_token, userName: response.userName, refreshToken: response.refresh_token, useRefreshTokens: true });
                     }
+                    else {
+                        this.localStorageService.set('authorizationData', { token: response.access_token, userName: response.userName, refreshToken: "", useRefreshTokens: false });
+                    }
+
+                    this.fillAuthData();
+                    deferred.resolve(response);
+                })
+
+                .error((err) => {
+                    this.logout();
+                    deferred.reject(err);
                 });
+
+            return deferred.promise;
         }
 
         /** Remove Security Tokens from Client */
@@ -113,16 +117,15 @@
         }
     }
 
-
-
     factory.$inject = [
         '$http',
         '$location',
+        '$q',
         'app.blocks.ApiEndpoint',
         'localStorageService'
     ];
-    function factory($http: angular.IHttpService, $location: angular.ILocationService, apiEndpoint: Blocks.IApiEndpointConfig, localStorageService: angular.local.storage.ILocalStorageService): IAuthenicationService {
-        return new AuthenticationService($http, $location, apiEndpoint, localStorageService);
+    function factory($http: angular.IHttpService, $location: angular.ILocationService, $q: angular.IQService, apiEndpoint: Blocks.IApiEndpointConfig, localStorageService: angular.local.storage.ILocalStorageService): IAuthenicationService {
+        return new AuthenticationService($http, $location, $q, apiEndpoint, localStorageService);
     }
 
     angular

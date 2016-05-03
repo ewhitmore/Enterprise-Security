@@ -17,7 +17,7 @@
             private localStorageService: angular.local.storage.ILocalStorageService) {
         }
 
-        request = (config) => {
+        request = (config:any) => {
             config.headers = config.headers || {};
 
             var authData = this.localStorageService.get('authorizationData') as any;
@@ -28,19 +28,18 @@
             return config;
         }
 
-        requestError = (rejection) => {
+        requestError = (rejection: any) => {
             return rejection;
         }
 
-        response = (response) => {
+        response = (response: any) => {
             return response;
         }
 
-        responseError = (rejection) => {
+        responseError = (rejection: any) => {
 
             // Recieved a 401 (Unauthorized)
             if (rejection.status === 401) {
-
                 var authService = this.$injector.get('app.blocks.authenticationService') as Blocks.AuthenticationService;
                 var authData = this.localStorageService.get('authorizationData') as any;
 
@@ -57,7 +56,8 @@
                     return this.$q.reject(rejection);
                 }
             }
-            return rejection;
+
+            return this.$q.reject(rejection);
         }
     }
 

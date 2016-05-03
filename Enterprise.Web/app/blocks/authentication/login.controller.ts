@@ -16,16 +16,13 @@
 
         // Login and Bearer Token
         login(authDataDto: Blocks.IAuthDataDto): void {
-            this.authenticationService.login(authDataDto)
-                .then(() => {
-
-                    this.$location.path('/home');
-                }, err => {
-                    this.message = err.data.error_description;
-                });
+            this.authenticationService.login(authDataDto).then((data) => {
+                this.$location.path('/home');
+            }, err => {
+                this.message = err.error_description;
+            });
         }
     }
-
 
     // Hook my ts class into an angularjs module
     angular.module("app.blocks")
