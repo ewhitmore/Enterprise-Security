@@ -3,53 +3,47 @@
 
     export interface IAuthInterceptorService {
 
+        request(config: any): angular.IPromise<any>;
+        responseError(rejection: any): angular.IPromise<any>;
     }
+
 
 
     // TODO: refacter this into a more "typescripty" format
     class AuthInterceptorService {
-        constructor(
-            private $q: angular.IQService,
-            private $injector: angular.auto.IInjectorService,
-            private $location: angular.ILocationService,
-            private localStorageService: angular.local.storage.ILocalStorageService) {
-
-            var authInterceptorServiceFactory = {} as any;
-
-            var _request = config => {
-
-                config.headers = config.headers || {};
-
-                var authData = localStorageService.get('authorizationData') as any;
-                if (authData) {
-                    config.headers.Authorization = 'Bearer ' + authData.token;
-                }
-
-                return config;
-            }
-
-            var _responseError = rejection => {
-                if (rejection.status === 401) {
-                    var authService = $injector.get('app.blocks.authenticationService') as App.Blocks.AuthenticationService;
-                    var authData = localStorageService.get('authorizationData') as any;
-
-                    if (authData) {
-                        if (authData.useRefreshTokens) {
-                            $location.path('/refresh');
-                            return $q.reject(rejection);
-                        }
-                    }
-                    authService.logout();
-                    $location.path('/login');
-                }
-                return $q.reject(rejection);
-            }
-
-            authInterceptorServiceFactory.request = _request;
-            authInterceptorServiceFactory.responseError = _responseError;
-
-            return authInterceptorServiceFactory;
+        
+        constructor(private $q: angular.IQService, private $injector: angular.auto.IInjectorService, private $location: angular.ILocationService, private localStorageService: angular.local.storage.ILocalStorageService) {
+            
         }
+
+        request = (config) => {
+            config.headers = config.headers || {};
+
+            var authData = this.localStorageService.get('authorizationData') as any;
+            if (authData) {
+                config.headers.Authorization = 'Bearer ' + authData.token;
+            }
+
+            return config;
+        }
+
+        responseError = (rejection) => {
+            if (rejection.status === 401) {
+                var authService = this.$injector.get('app.blocks.authenticationService') as App.Blocks.AuthenticationService;
+                var authData = this.localStorageService.get('authorizationData') as any;
+
+                if (authData) {
+                    if (authData.useRefreshTokens) {
+                        this.$location.path('/refresh');
+                        return this.$q.reject(rejection);
+                    }
+                }
+                authService.logout();
+                this.$location.path('/login');
+            }
+            return this.$q.reject(rejection);
+        }
+       
     }
 
     factory.$inject = ['$q', '$injector', '$location', 'localStorageService'];

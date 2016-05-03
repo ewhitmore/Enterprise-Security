@@ -118,7 +118,7 @@
         'app.blocks.ApiEndpoint',
         'localStorageService'
     ];
-    function factory($http: ng.IHttpService, apiEndpoint: Blocks.IApiEndpointConfig, localStorageService: angular.local.storage.ILocalStorageService): IAuthenicationService {
+    function factory($http: angular.IHttpService, apiEndpoint: Blocks.IApiEndpointConfig, localStorageService: angular.local.storage.ILocalStorageService): IAuthenicationService {
         return new AuthenticationService($http, apiEndpoint, localStorageService);
     }
 
