@@ -12,7 +12,6 @@
 
 </head>
 <body>
-
     <!--Navbar-->
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller="app.layout.navigationController as nav">
         <div class="container">
@@ -37,13 +36,9 @@
     </div>
 
 <div class="container">
-
-
-
     <div ng-view>
     </div>
 </div>
-
     <hr />
     <div id="footer">
         <div class="container">
@@ -58,8 +53,6 @@
         </div>
     </div>
 
-
-
     <!-- Libs -->
     <script src="Scripts/jquery-2.2.3.js"></script>
     <script src="Scripts/bootstrap.js"></script>
@@ -70,16 +63,17 @@
     <script src="Scripts/angular-local-storage.js"></script>
     <!--<script src="Scripts/angular-ui-router.js"></script>-->
     <script src="Scripts/angular-ui/ui-bootstrap-tpls.js"></script>
+
     <!--CORE-->
     <script src="app/app.module.js"></script>
     <script src="app/app.js"></script>
     <script src="app/app.core.js"></script>
     <script src="app/app.routes.js"></script>
+
     <!--BLOCKS-->
     <script src="app/blocks/blocks.module.js"></script>
     <script src="app/blocks/apiendpoint.config.js"></script>
     <script src="app/blocks/apiendpoint.provider.js"></script>
-
 
     <script src="app/blocks/authentication/authDataDto.js"></script>
     <script src="app/blocks/authentication/authentication.config.js"></script>
@@ -88,9 +82,11 @@
     <script src="app/blocks/authentication/login.controller.js"></script>
     <script src="app/blocks/authentication/refresh.controller.js"></script>
 
+    <script src="app/blocks/account/accountDto.js"></script>
+    <script src="app/blocks/account/account.controller.js"></script>
+    <script src="app/blocks/account/account.service.js"></script>
 
-
-<!--LAYOUT-->
+    <!--LAYOUT-->
     <script src="app/layout/layout.module.js"></script>
     <script src="app/layout/navigation.controller.js"></script>
     <script src="app/layout/home.controller.js"></script>
@@ -100,7 +96,7 @@
     <script src="app/services/authInterceptor.service.js"></script>
     <!--WIDGETS-->
     <script src="app/widgets/widgets.module.js"></script>
-<!--FEATURES-->
+    <!--FEATURES-->
     <script src="app/teacher/teacher.module.js"></script>
     <script src="app/teacher/teacherDto.js"></script>
     <script src="app/teacher/teacher.service.js"></script>

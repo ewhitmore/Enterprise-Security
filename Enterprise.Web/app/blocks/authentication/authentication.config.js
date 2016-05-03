@@ -8,3 +8,4 @@
 //        authenicationProvider.configure("AngularWebClient");
 //    }
 //} 
+//# sourceMappingURL=authentication.config.js.map

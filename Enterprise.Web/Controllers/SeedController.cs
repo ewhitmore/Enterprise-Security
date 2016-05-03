@@ -1,5 +1,4 @@
 ﻿using System.Web.Http;
-using Enterprise.Persistence.Model;
 using Enterprise.Web.Services;
 
 namespace Enterprise.Web.Controllers
@@ -30,8 +29,7 @@ namespace Enterprise.Web.Controllers
         [Route("init")]
         public IHttpActionResult Init()
         {
-            var results = SecurityService.InitalizeSecurity();
-            return Ok(results);
+            return Ok(SecurityService.InitalizeSecurity());
         }
 
     }

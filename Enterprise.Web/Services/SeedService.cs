@@ -1,25 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using Enterprise.Model;
-using Enterprise.Persistence;
 using Enterprise.Persistence.Dao;
-using Enterprise.Persistence.Model;
-using Enterprise.Web.Utils;
-using Microsoft.AspNet.Identity;
-using NHibernate.AspNet.Identity;
 
 namespace Enterprise.Web.Services
 {
     public class SeedService : ISeedService
     {
         public IClassroomDao ClassroomDao { private get; set; }
-        public IClientDao ClientDao { private get; set; }
 
         public ISecurityService SecurityService { get; set; }
 
         public void Seed()
         {
-
             var teacher = new Teacher()
             {
                 Birthday = new DateTime(1982, 01, 01),
@@ -70,21 +63,7 @@ namespace Enterprise.Web.Services
 
             ClassroomDao.Save(classroom);
 
-
-            var client = new Client()
-            {
-                ClientId = "AngularWebClient",
-                Secret = Helper.GetHash("abc@123"),
-                Name = "AngularJS front-end Application",
-                ApplicationType = ApplicationTypes.JavaScript,
-                Active = true,
-                RefreshTokenLifeTime = 7200,
-                AllowedOrigin = "*"
-            };
-
-            ClientDao.Save(client);
-
-            SecurityService.CreateUser("user@localhost", "ewhitmore", "ewhitmore");
+            SecurityService.CreateUser("ewhitmore@localhost", "ewhitmore", "ewhitmore");
         }
     }
 }

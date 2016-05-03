@@ -79,7 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationUser.cs" />
+    <Compile Include="Model\ApplicationUser.cs" />
     <Compile Include="Dao\Implementation\ClientDao.cs" />
     <Compile Include="Dao\IClientDao.cs" />
     <Compile Include="Dao\Implementation\RefreshTokenDao.cs" />
@@ -105,9 +105,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Enterprise.Model\Enterprise.Model.csproj">
       <Project>{C7FBD3F0-A731-4F27-AAC4-677A657A301A}</Project>

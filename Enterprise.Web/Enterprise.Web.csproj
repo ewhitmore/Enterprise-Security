@@ -196,7 +196,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="app\blocks\account\" />
     <Folder Include="App_Data\" />
     <Folder Include="Providers\" />
   </ItemGroup>
@@ -1144,6 +1143,9 @@
     <TypeScriptCompile Include="app\app.module.ts" />
     <TypeScriptCompile Include="app\app.routes.ts" />
     <TypeScriptCompile Include="app\app.ts" />
+    <TypeScriptCompile Include="app\blocks\account\account.controller.ts" />
+    <TypeScriptCompile Include="app\blocks\account\account.service.ts" />
+    <TypeScriptCompile Include="app\blocks\account\accountDto.ts" />
     <TypeScriptCompile Include="app\blocks\apiendpoint.config.ts" />
     <TypeScriptCompile Include="app\blocks\apiendpoint.provider.ts" />
     <TypeScriptCompile Include="app\blocks\authentication\authDataDto.ts" />

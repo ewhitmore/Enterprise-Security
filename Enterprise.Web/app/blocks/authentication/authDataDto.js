@@ -11,3 +11,4 @@ var App;
         Blocks.AuthDataDto = AuthDataDto;
     })(Blocks = App.Blocks || (App.Blocks = {}));
 })(App || (App = {}));
+//# sourceMappingURL=authDataDto.js.map

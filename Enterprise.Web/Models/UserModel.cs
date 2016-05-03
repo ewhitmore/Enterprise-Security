@@ -22,5 +22,10 @@ namespace Enterprise.Web.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [DataType(DataType.EmailAddress)]
+        [Required]
+        [Display(Name = "EmailAddress")]
+        public string EmailAddress { get; set; }
     }
 }

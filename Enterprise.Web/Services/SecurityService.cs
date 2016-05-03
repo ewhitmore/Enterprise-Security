@@ -3,6 +3,7 @@ using System.Linq;
 using Enterprise.Model;
 using Enterprise.Persistence.Dao;
 using Enterprise.Persistence.Model;
+using Enterprise.Web.Utils;
 using Microsoft.AspNet.Identity;
 using NHibernate;
 using NHibernate.AspNet.Identity;
@@ -61,6 +62,8 @@ namespace Enterprise.Web.Services
         /// </summary>
         public IdentityResult InitalizeSecurity()
         {
+            // todo: this should really return a list of Identity Results with some fall through
+            
             if (UserExists("Admin")) return new IdentityResult("Admin already exists");
 
             var createUserResults = CreateUser("admin@localhost", "Admin", "TheAdminPass");
@@ -78,7 +81,16 @@ namespace Enterprise.Web.Services
             }
 
             var user = UserManager.FindByName("Admin");
-            return UserManager.AddToRole(user.Id, "SysAdmin");
+            var adduserToRole = UserManager.AddToRole(user.Id, "SysAdmin");
+
+            if (!adduserToRole.Succeeded)
+            {
+                return new IdentityResult(string.Concat(adduserToRole.Errors, ","));
+            }
+
+            CreateClient();
+
+            return new IdentityResult("Initalize Security Successful");
         }
 
         /// <summary>
@@ -186,6 +198,23 @@ namespace Enterprise.Web.Services
         public List<RefreshToken> GetAllRefreshTokens()
         {
             return RefreshTokenDao.GetAll().ToList();
+        }
+
+        private void CreateClient()
+        {
+
+            var client = new Client()
+            {
+                ClientId = "AngularWebClient",
+                Secret = Helper.GetHash("abc@123"),
+                Name = "AngularJS front-end Application",
+                ApplicationType = ApplicationTypes.JavaScript,
+                Active = true,
+                RefreshTokenLifeTime = 7200,
+                AllowedOrigin = "*"
+            };
+
+            ClientDao.Save(client);
         }
     }
 }
