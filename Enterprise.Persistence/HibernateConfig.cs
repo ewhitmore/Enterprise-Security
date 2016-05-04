@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using Enterprise.Persistence.Dao.Mapping;
 using Enterprise.Persistence.Model;
+using Enterprise.Persistence.Utils;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
@@ -38,6 +39,7 @@ namespace Enterprise.Persistence
                 .ExposeConfiguration(cfg => { cfg.AddDeserializedMapping(MappingHelper.GetIdentityMappings(new [] { typeof(ApplicationUser) }), null); })
                 .ExposeConfiguration(cfg => cfg.SetProperty("current_session_context_class", context))
                 .ExposeConfiguration(cfg => cfg.SetProperty("adonet.batch_size", "100"))
+                .ExposeConfiguration(x => x.SetInterceptor(new SqlStatementInterceptor()))
                 //.ExposeConfiguration(cfg => cfg.SetProperty("query.substitutions", "true 1, false 0"))
                 //.ExposeConfiguration(cfg => cfg.SetProperty("use_proxy_validator", "true"))
                 .ExposeConfiguration(SchemaSelector)

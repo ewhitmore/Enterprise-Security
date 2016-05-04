@@ -4,6 +4,6 @@ namespace Enterprise.Persistence.Model
 {
     public class ApplicationUser : IdentityUser
     {
-        
+        public virtual bool LoginDisabled { get; set; }
     }
 }

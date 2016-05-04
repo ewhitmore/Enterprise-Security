@@ -12,6 +12,7 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
 using NHibernate;
 using NHibernate.AspNet.Identity;
+using NHibernate.Linq;
 
 namespace Enterprise.Web.Security
 {
@@ -104,6 +105,20 @@ namespace Enterprise.Web.Security
             if (user == null)
             {
                 context.SetError("invalid_grant", "The user name or password is incorrect.");
+                return;
+            }
+            
+            
+            // Make sure we are getting a fresh copy from the database
+            Session.Flush();
+            Session.Clear();
+
+            // Get application User
+            var applicationUser = Session.Query<ApplicationUser>().First(x => x.Id == user.Id);
+
+            if (applicationUser.LoginDisabled)
+            {
+                context.SetError("invalid_grant", "Your account has been locked!");
                 return;
             }
 
