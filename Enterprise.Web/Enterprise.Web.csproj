@@ -240,8 +240,6 @@
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Controllers\TeacherController.cs" />
     <Compile Include="Models\ClassroomDto.cs" />
-    <Compile Include="Models\ParsedExternalAccessToken.cs" />
-    <Compile Include="Models\RegisterExternalBindingModel.cs" />
     <Compile Include="Models\StudentDto.cs" />
     <Compile Include="Models\TeacherDto.cs" />
     <Compile Include="Models\UserModel.cs" />
